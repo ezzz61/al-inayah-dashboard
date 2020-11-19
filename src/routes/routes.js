@@ -62,6 +62,60 @@ const routes = [
 
       },
       {
+        path: 'tenant',
+        name: 'tenant',
+        component: () => import('src/pages/Tenant/Tenant.vue'),
+
+      },
+      {
+        path: 'tenant/add',
+        name: 'add_tenant',
+        component: () => import('src/pages/Tenant/Add.vue'),
+
+      },
+      {
+        path: 'tenant/update/:id',
+        name: 'update_tenant',
+        component: () => import('src/pages/Tenant/Update.vue'),
+
+      },
+      {
+        path: 'event',
+        name: 'event',
+        component: () => import('src/pages/Event/Event.vue'),
+
+      },
+      {
+        path: 'event/add',
+        name: 'add_event',
+        component: () => import('src/pages/Event/Add.vue'),
+
+      },
+      {
+        path: 'event/update/:id',
+        name: 'update_event',
+        component: () => import('src/pages/Event/Update.vue'),
+
+      },
+      {
+        path: 'blog',
+        name: 'blog',
+        component: () => import('src/pages/Blog/Blog.vue'),
+
+      },
+      {
+        path: 'blog/add',
+        name: 'add_blog',
+        component: () => import('src/pages/Blog/Add.vue'),
+
+      },
+      {
+        path: 'blog/update/:id',
+        name: 'update_blog',
+        component: () => import('src/pages/Blog/Update.vue'),
+
+      },
+      {
         path: 'floor/add',
         name: 'add_floor',
         component: () => import('src/pages/Floor/Add.vue'),

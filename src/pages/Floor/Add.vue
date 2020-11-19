@@ -108,7 +108,6 @@ export default {
           });
           this.$router.push({
             path: "/admin/floor",
-            query: { add: "success" },
           });
 
           this.isLoading = false;

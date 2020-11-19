@@ -26,6 +26,7 @@
     "vue-jwt-decode": "^0.1.0",
     "vue-notifyjs": "^0.4.3",
     "vue-router": "^3.0.2",
+    "vue-upload-multiple-image": "^1.1.6",
     "vue2-google-maps": "^0.8.4"
   },
   "devDependencies": {

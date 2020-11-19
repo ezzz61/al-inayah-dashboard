@@ -4,6 +4,9 @@ export default {
   Get() {
     return Api().get('floor/')
   },
+  GetActive() {
+    return Api().get('floor?active=1')
+  },
   Add(data) {
     return Api().post('floor/', data)
   },

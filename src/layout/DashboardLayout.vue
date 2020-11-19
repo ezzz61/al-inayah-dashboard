@@ -15,15 +15,15 @@
         <i class="nc-icon nc-tag-content"></i>
         <p>Category</p>
       </sidebar-link>
-      <sidebar-link to="/admin/typography">
+      <sidebar-link to="/admin/tenant">
         <i class="nc-icon nc-cart-simple"></i>
         <p>Tenant</p>
       </sidebar-link>
-      <sidebar-link to="/admin/icons">
+      <sidebar-link to="/admin/event">
         <i class="nc-icon nc-air-baloon"></i>
         <p>Event & Promotion</p>
       </sidebar-link>
-      <sidebar-link to="/admin/maps">
+      <sidebar-link to="/admin/blog">
         <i class="nc-icon nc-ruler-pencil"></i>
         <p>Blog</p>
       </sidebar-link>
@@ -58,15 +58,30 @@ export default {
   created() {
     let token = this.$cookie.get("token");
     let data = JSON.parse(this.$cookie.get("data_user"));
-    this.name = data.username;
-    if (token !== null && data.role == "admin") {
-      this.role = "admin";
-    } else if (token !== null && data.role == "super admin") {
-      this.role = "super admin";
+    if (this.$cookie.get("data_user") && this.$cookie.get("token")) {
+      if (token !== null && data.role == "admin") {
+        this.role = "admin";
+      } else if (token !== null && data.role == "super admin") {
+        this.role = "super admin";
+      }
     } else {
       this.$router.push({ path: "/login" });
     }
+
+    if (data.username === null) {
+      this.$notify({
+        message: "please login again",
+        icon: "fa fa-sign-in-alt",
+        horizontalAlign: "right",
+        verticalAlign: "top",
+        type: "warning",
+      });
+
+      this.$router.push({ path: "/login" });
+    }
+    this.name = data.username;
   },
+
   components: {
     TopNavbar,
     ContentFooter,

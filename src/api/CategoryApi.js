@@ -4,6 +4,9 @@ export default {
   Get() {
     return Api().get('category/')
   },
+  GetActive() {
+    return Api().get('category?active=1')
+  },
   Add(data) {
     return Api().post('category/', data)
   },

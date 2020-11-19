@@ -69,7 +69,7 @@
                   {{
                     new Date(row.created_at).getDate().toString() +
                     " " +
-                    month_name[new Date(row.created_at).getDate()] +
+                    month_name[new Date(row.created_at).getMonth()] +
                     " " +
                     new Date(row.created_at).getFullYear().toString().substr(-2)
                   }}
