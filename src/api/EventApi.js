@@ -1,7 +1,8 @@
 import Api from '@/api/api'
 
 export default {
-  Get() {
+  Get(type) {
+    if (type) return Api().get('event/?source=verification')
     return Api().get('event/')
   },
   Add(data) {
@@ -18,5 +19,8 @@ export default {
   },
   Upload(id, data) {
     return Api().post('event/upload/' + id, data)
-  }
+  },
+  Finish(id) {
+    return Api().put('/event/finish/' + id)
+  },
 }

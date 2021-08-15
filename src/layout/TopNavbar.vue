@@ -44,6 +44,8 @@ export default {
     handlelogout() {
       this.$cookie.delete("token");
       this.$cookie.delete("data_user");
+      localStorage.removeItem("token");
+      localStorage.removeItem("data_user");
 
       this.$router.push({ path: "/login" });
     },

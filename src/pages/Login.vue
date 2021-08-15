@@ -81,41 +81,53 @@ export default {
       evt.preventDefault();
       this.error = [];
       this.isLoading = true;
-      let res = await Login.Login({
-        username: this.form.username,
-        password: this.form.password,
-      });
+      try {
+        let res = await Login.Login({
+          username: this.form.username,
+          password: this.form.password,
+        });
 
-      if (res.data.token) {
-        try {
-          var expired = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        if (res.data.token) {
+          try {
+            var expired = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
-          let data_user = await this.$jwtDec.decode(res.data.token);
-          this.$cookie.set("token", res.data.token, {
-            expires: expired,
-          });
-          this.$cookie.set("data_user", JSON.stringify(data_user), {
-            expires: expired,
-          });
+            let data_user = await this.$jwtDec.decode(res.data.token);
+            this.$cookie.set("token", res.data.token, {
+              expires: expired,
+            });
+            this.$cookie.set("data_user", JSON.stringify(data_user), {
+              expires: expired,
+            });
+            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("data_user", JSON.stringify(data_user));
+            this.$notify({
+              message: "success login",
+              icon: "fa fa-check-circle",
+              horizontalAlign: "center",
+              verticalAlign: "top",
+              type: "success",
+            });
+            this.$router.push({ path: "/admin" });
+          } catch (err) {
+            console.log(err);
+          }
+          // console.log(role.role);
+          // console.log(this.$jwtDec);
 
-          // this.$router.push({ path: "/product" });
-          this.$router.push({ path: "/admin" });
-        } catch (err) {
-          console.log(err);
+          this.isLoading = false;
+        } else {
+          this.isLoading = false;
+          this.error.push(res.data.message);
         }
-        // console.log(role.role);
-        // console.log(this.$jwtDec);
-
+      } catch (error) {
         this.isLoading = false;
-      } else {
-        this.isLoading = false;
-        this.error.push(res.data.message);
+        this.error.push("something went wrong");
       }
     },
   },
   created() {
-    let token = this.$cookie.get("token");
-    let data = JSON.parse(this.$cookie.get("data_user"));
+    let token = localStorage.getItem("token");
+    let data = JSON.parse(localStorage.getItem("data_user"));
 
     if (token !== null && data !== null) {
       this.$router.push({ path: "/" });

@@ -2,8 +2,10 @@
   <b-container fluid>
     <!-- User Interface controls -->
     <notifications> </notifications>
-
-    <b-row class="mt-5">
+    <div class="row justify-content-center">
+      <h3>please select event</h3>
+    </div>
+    <b-row class="mt-2">
       <b-col lg="6" class="my-1">
         <b-form-group
           label="Sort"
@@ -35,18 +37,6 @@
             </b-form-select>
           </b-input-group>
         </b-form-group>
-      </b-col>
-      <b-col lg="6" class="my-1">
-        <div class="row justify-content-center">
-          <div class="col-6">
-            <button
-              class="btn btn-icon btn-primary btn-fill"
-              @click="$router.push({ path: 'event/add' })"
-            >
-              <i class="nc-icon nc-simple-add"> New Event</i>
-            </button>
-          </div>
-        </div>
       </b-col>
     </b-row>
     <b-row>
@@ -127,18 +117,12 @@
                 class="btn btn-icon btn-info mx-1"
                 @click="
                   $router.push({
-                    name: 'update_event',
+                    name: 'confirm_event',
                     params: { id: row.item._id },
                   })
                 "
               >
-                <i class="fa fa-edit"></i>
-              </button>
-              <button
-                class="btn btn-icon btn-danger mx-1"
-                @click="info(row.item, row.index, $event.target)"
-              >
-                <i class="fa fa-trash"></i>
+                <i class="fa fa-edit"></i>select
               </button>
             </template>
           </b-table>
@@ -345,7 +329,7 @@ export default {
     async loadStart() {
       try {
         this.isLoading = true;
-        let res = await Event.Get();
+        let res = await Event.Get(true);
         this.items = res.data.data;
         this.totalRows = this.items.length;
         this.isLoading = false;

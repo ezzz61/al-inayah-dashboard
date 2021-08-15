@@ -7,26 +7,27 @@
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Dashboard</p>
       </sidebar-link>
-      <sidebar-link to="/admin/floor">
-        <i class="nc-icon nc-square-pin"></i>
-        <p>Floor</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/category">
-        <i class="nc-icon nc-tag-content"></i>
-        <p>Category</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/tenant">
-        <i class="nc-icon nc-cart-simple"></i>
-        <p>Tenant</p>
-      </sidebar-link>
       <sidebar-link to="/admin/event">
+        <i class="nc-icon nc-square-pin"></i>
+        <p>Event</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/user">
+        <i class="nc-icon nc-square-pin"></i>
+        <p>User</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/verification">
+        <i class="nc-icon nc-tag-content"></i>
+        <p>verification</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/result">
+        <i class="nc-icon nc-cart-simple"></i>
+        <p>Result</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/report">
         <i class="nc-icon nc-air-baloon"></i>
-        <p>Event & Promotion</p>
+        <p>Report</p>
       </sidebar-link>
-      <sidebar-link to="/admin/blog">
-        <i class="nc-icon nc-ruler-pencil"></i>
-        <p>Blog</p>
-      </sidebar-link>
+
       <!-- <sidebar-link to="/admin/notifications">
         <i class="nc-icon nc-bell-55"></i>
         <p>Notifications</p>
@@ -58,6 +59,7 @@ export default {
   created() {
     let token = this.$cookie.get("token");
     let data = JSON.parse(this.$cookie.get("data_user"));
+    console.log(data);
     if (this.$cookie.get("data_user") && this.$cookie.get("token")) {
       if (token !== null && data.role == "admin") {
         this.role = "admin";
@@ -80,6 +82,8 @@ export default {
       this.$router.push({ path: "/login" });
     }
     this.name = data.username;
+
+    console.log(this.role);
   },
 
   components: {

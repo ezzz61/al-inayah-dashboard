@@ -226,18 +226,14 @@ export default {
     };
   },
   async created() {
-    try {
-      this.isLoading = true;
-      let res = await Dashboard.Get();
-      if (res.data.success) {
-        this.data = res.data.data;
-        this.isLoading = false;
-      } else {
-        alert("error when get the api data");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   this.isLoading = true;
+    //   let res = await Dashboard.Get();
+    //   this.data = res.data.data;
+    //   this.isLoading = false;
+    // } catch (error) {
+    //   console.log(error);
+    // }
   },
 };
 </script>

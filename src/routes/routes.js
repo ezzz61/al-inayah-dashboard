@@ -44,41 +44,66 @@ const routes = [
         component: Floor
       },
       {
-        path: 'category',
-        name: 'category',
-        component: () => import('src/pages/Category/Category.vue'),
+        path: 'verification',
+        name: 'verification',
+        component: () => import('src/pages/Verification/Verification.vue'),
+
+      },
+
+      {
+        path: 'verification/c/:id',
+        name: 'confirm_event',
+        component: () => import('src/pages/Verification/Confirmation.vue'),
+      },
+      {
+        path: 'candidate/e/:event_id',
+        name: 'add_candidate',
+        component: () => import('src/pages/Verification/Candidate.vue'),
+      },
+
+
+      {
+        path: 'verification/:id_event/detail/:id_candidate',
+        name: 'detail_event_confirm',
+        component: () => import('src/pages/Verification/VerificationDetail.vue'),
 
       },
       {
-        path: 'category/add',
-        name: 'add_category',
-        component: () => import('src/pages/Category/Add.vue'),
+        path: 'verification/update/:id',
+        name: 'update_verification',
+        component: () => import('src/pages/Verification/Update.vue'),
 
       },
       {
-        path: 'category/update/:id',
-        name: 'update_category',
-        component: () => import('src/pages/Category/Update.vue'),
+        path: 'result',
+        name: 'result',
+        component: () => import('src/pages/Result/Result.vue'),
 
       },
       {
-        path: 'tenant',
-        name: 'tenant',
-        component: () => import('src/pages/Tenant/Tenant.vue'),
+        path: 'result/:id',
+        name: 'result_detail',
+        component: () => import('src/pages/Result/Detail.vue'),
 
       },
-      {
-        path: 'tenant/add',
-        name: 'add_tenant',
-        component: () => import('src/pages/Tenant/Add.vue'),
+      // {
+      //   path: 'tenant',
+      //   name: 'result',
+      //   component: () => import('src/pages/Tenant/Tenant.vue'),
 
-      },
-      {
-        path: 'tenant/update/:id',
-        name: 'update_tenant',
-        component: () => import('src/pages/Tenant/Update.vue'),
+      // },
+      // {
+      //   path: 'tenant/add',
+      //   name: 'add_tenant',
+      //   component: () => import('src/pages/Tenant/Add.vue'),
 
-      },
+      // },
+      // {
+      //   path: 'tenant/update/:id',
+      //   name: 'update_tenant',
+      //   component: () => import('src/pages/Tenant/Update.vue'),
+
+      // },
       {
         path: 'event',
         name: 'event',
@@ -130,7 +155,17 @@ const routes = [
       {
         path: 'user',
         name: 'User',
-        component: UserProfile
+        component: () => import('src/pages/User/User.vue'),
+      },
+      {
+        path: 'user/u/:id',
+        name: 'User_update',
+        component: () => import('src/pages/User/Update.vue'),
+      },
+      {
+        path: 'user/add',
+        name: 'User_add',
+        component: () => import('src/pages/User/Add.vue'),
       },
       {
         path: 'table-list',

@@ -7,107 +7,128 @@
         <b-col cols="6" md="6" class="my-1">
           <card>
             <div>
-              <h1 class="text-center">Add Event</h1>
+              <h1 class="text-center">Add User</h1>
               <b-alert :show="showError" variant="danger">{{
                 messageError
               }}</b-alert>
               <b-form @submit="onSubmit">
                 <b-form-group
                   id="input-group-1"
-                  label=" Event Name:"
+                  label=" userName:"
                   label-for="input-1"
                 >
                   <b-form-input
                     id="Event"
-                    v-model="form.name"
+                    v-model="form.username"
                     type="text"
                     required
-                    placeholder="Event name ex: BANSOS KEMENAG 2021"
+                    placeholder=" username ex: andimalaran"
                   ></b-form-input>
                 </b-form-group>
-
                 <b-form-group
                   id="input-group-1"
-                  label=" end date:"
-                  label-for="input-1"
-                >
-                  <b-form-datepicker
-                    id="example-datepicker"
-                    v-model="form.end_time"
-                    class="mb-2"
-                  ></b-form-datepicker>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label=" total recipient:"
+                  label="Password:"
                   label-for="input-1"
                 >
                   <b-form-input
-                    id="Total"
-                    v-model="form.total"
+                    id="Event"
+                    v-model="form.password"
+                    type="password"
+                    required
+                    placeholder="password"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label=" first name:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="Event"
+                    v-model="form.firstname"
                     type="text"
                     required
-                    placeholder="Total Recepient for this event,example:20"
+                    placeholder="firstname ex: andi"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label=" last name:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="Event"
+                    v-model="form.lastname"
+                    type="text"
+                    required
+                    placeholder="last name ex: malaranggi"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label="Rt:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="Event"
+                    v-model="form.rt"
+                    type="text"
+                    required
+                    placeholder="rt name ex: 07"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label="Rw:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="Event"
+                    v-model="form.rw"
+                    type="text"
+                    required
+                    placeholder="Rw name ex: 12"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label="Kelurahan:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="Event"
+                    v-model="form.kelurahan"
+                    type="text"
+                    required
+                    placeholder="kelurahan, ex: sindangsari"
                   ></b-form-input>
                 </b-form-group>
 
                 <b-form-group
                   id="input-group-1"
-                  label=" Criteria:"
+                  label="Address:"
                   label-for="input-1"
                 >
-                  <card>
-                    <div v-for="(data, index) in arr_criteria" :key="index">
-                      <b-form-group
-                        class="mt-3"
-                        id="input-group-1"
-                        :label="'criteria ' + (index + 1) + ':'"
-                        label-for="input-1"
-                      ></b-form-group>
-                      <b-form-input
-                        id="Event"
-                        v-model="arr_criteria[index].name"
-                        type="text"
-                        required
-                        placeholder="criteria name"
-                      ></b-form-input>
-                      <b-form-input
-                        id="Event"
-                        v-model="arr_criteria[index].point"
-                        class="mt-2"
-                        type="text"
-                        required
-                        placeholder="point , ex:20 , max : all combination is 100"
-                      ></b-form-input>
-                      <b-form-select
-                        v-model="arr_criteria[index].type"
-                        :options="options_data"
-                        size="l"
-                        class="mt-2"
-                      ></b-form-select>
-                      <div
-                        v-if="index != 0"
-                        class="row mt-2 mb-5 justify-content-center"
-                      >
-                        <button
-                          class="btn btn-icon btn-danger btn-outline mr-4"
-                          @click="RemoveCriteria(index)"
-                        >
-                          <i class="nc-icon nc-simple-remove"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="row justify-content-center">
-                      <div class="col-4">
-                        <b-button
-                          class="mr-1"
-                          variant="primary"
-                          @click="AddCriteria()"
-                          >add criteria</b-button
-                        >
-                      </div>
-                    </div>
-                  </card>
+                  <b-form-input
+                    id="Event"
+                    v-model="form.address"
+                    type="text"
+                    required
+                    placeholder="address ex: perumahan taman walet"
+                  ></b-form-input>
+                </b-form-group>
+
+                <b-form-group
+                  id="input-group-1"
+                  label="Role:"
+                  label-for="input-1"
+                >
+                  <b-form-select
+                    v-model="form.role_id"
+                    :options="options_data"
+                    size="l"
+                    class="mt-2"
+                  ></b-form-select>
                 </b-form-group>
 
                 <b-row class="justify-content-center">
@@ -144,6 +165,8 @@
 
 <script>
 import Event from "@/api/EventApi";
+import User from "@/api/UserApi";
+
 import VueUploadMultipleImage from "vue-upload-multiple-image";
 import Floor from "@/api/FloorApi";
 import Category from "@/api/CategoryApi";
@@ -164,11 +187,7 @@ export default {
           type: null,
         },
       ],
-      options_data: [
-        { value: null, text: "Please select type", disabled: true },
-        { value: "up", text: "Upper is Better" },
-        { value: "down", text: "Lower is Better" },
-      ],
+      options_data: [],
       images: [],
       allImage: [],
       angka: 2,
@@ -232,7 +251,7 @@ export default {
       let data = this.form;
       data["criteria"] = this.arr_criteria;
       try {
-        let res = await Event.Add(data);
+        let res = await User.AddUser(data);
         if (res.data.success) {
           this.success = true;
           this.$notify({
@@ -243,7 +262,7 @@ export default {
             type: "success",
           });
           this.$router.push({
-            path: "/admin/Event",
+            path: "/admin/user",
           });
           this.isLoading = false;
         } else {
@@ -265,34 +284,12 @@ export default {
     },
   },
   async created() {
-    let res_floor = await Floor.GetActive();
-    let res_category = await Category.GetActive();
-    let options_floor = [
-      { value: null, text: "Please select an floor", disabled: true },
-    ];
-    let options_category = [
-      { value: null, text: "Please select an category", disabled: true },
-    ];
-
-    res_floor.data.data.map((data) => {
-      data = {
-        value: data._id,
-        text: `${data.name}`,
-      };
-      options_floor.push(data);
-    });
-
-    res_category.data.data.map((data) => {
-      data = {
-        value: data._id,
-        text: `${data.name}`,
-      };
-      options_category.push(data);
-    });
-
-    this.options_floor = options_floor;
-
-    this.options_category = options_category;
+    let get_role = await User.Role();
+    if (get_role.data.data) {
+      this.options_data = get_role.data.data.map((el) => {
+        return { value: el._id, text: el.name };
+      });
+    }
 
     // console.log(vendor_data[0]._id);
     // this.items = res.data.data;

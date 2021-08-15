@@ -4,50 +4,80 @@
       <!-- User Interface controls -->
 
       <b-row class="mt-5 justify-content-center">
-        <b-col cols="6" md="6" class="my-1">
+        <b-col cols="7" md="7" class="my-1">
           <card>
             <div>
-              <h1 class="text-center">Add Event</h1>
+              <h4 class="text-center">Detail data candidate</h4>
               <b-alert :show="showError" variant="danger">{{
                 messageError
               }}</b-alert>
               <b-form @submit="onSubmit">
                 <b-form-group
                   id="input-group-1"
-                  label=" Event Name:"
+                  label="Candidate Nik:"
                   label-for="input-1"
                 >
                   <b-form-input
+                    id="input-live"
+                    type="number"
+                    :disabled="update_view || !is_editable"
+                    v-model="form.nik"
+                    :state="nikState"
+                    aria-describedby="input-live-help input-live-feedback"
+                    placeholder="Enter your name"
+                    trim
+                  ></b-form-input>
+
+                  <!-- This will only be shown if the preceding input has an invalid state -->
+                  <b-form-invalid-feedback id="input-live-feedback">
+                    16 character
+                  </b-form-invalid-feedback>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label="Candidate Name:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    :disabled="update_view || !is_editable"
                     id="Event"
+                    :state="nameState"
                     v-model="form.name"
                     type="text"
                     required
-                    placeholder="Event name ex: BANSOS KEMENAG 2021"
+                    placeholder="candidate name ex: Bambang Sutarjo"
+                  ></b-form-input>
+                  <b-form-invalid-feedback id="input-live-feedback">
+                    max 20 characters
+                  </b-form-invalid-feedback>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label=" Phone:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    :disabled="update_view || !is_editable"
+                    id="Event"
+                    v-model="form.phone"
+                    type="text"
+                    required
+                    placeholder="phone ex: 085727181292"
                   ></b-form-input>
                 </b-form-group>
 
                 <b-form-group
                   id="input-group-1"
-                  label=" end date:"
-                  label-for="input-1"
-                >
-                  <b-form-datepicker
-                    id="example-datepicker"
-                    v-model="form.end_time"
-                    class="mb-2"
-                  ></b-form-datepicker>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label=" total recipient:"
+                  label="Address:"
                   label-for="input-1"
                 >
                   <b-form-input
+                    :disabled="update_view || !is_editable"
                     id="Total"
-                    v-model="form.total"
+                    v-model="form.address"
                     type="text"
                     required
-                    placeholder="Total Recepient for this event,example:20"
+                    placeholder="user address,ex : perumahan taman walet Blok SL 15 no 02"
                   ></b-form-input>
                 </b-form-group>
 
@@ -61,51 +91,17 @@
                       <b-form-group
                         class="mt-3"
                         id="input-group-1"
-                        :label="'criteria ' + (index + 1) + ':'"
+                        :label="data.name + ':'"
                         label-for="input-1"
                       ></b-form-group>
                       <b-form-input
                         id="Event"
-                        v-model="arr_criteria[index].name"
+                        :disabled="update_view || !is_editable"
+                        v-model="arr_criteria[index].value"
                         type="text"
                         required
                         placeholder="criteria name"
                       ></b-form-input>
-                      <b-form-input
-                        id="Event"
-                        v-model="arr_criteria[index].point"
-                        class="mt-2"
-                        type="text"
-                        required
-                        placeholder="point , ex:20 , max : all combination is 100"
-                      ></b-form-input>
-                      <b-form-select
-                        v-model="arr_criteria[index].type"
-                        :options="options_data"
-                        size="l"
-                        class="mt-2"
-                      ></b-form-select>
-                      <div
-                        v-if="index != 0"
-                        class="row mt-2 mb-5 justify-content-center"
-                      >
-                        <button
-                          class="btn btn-icon btn-danger btn-outline mr-4"
-                          @click="RemoveCriteria(index)"
-                        >
-                          <i class="nc-icon nc-simple-remove"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="row justify-content-center">
-                      <div class="col-4">
-                        <b-button
-                          class="mr-1"
-                          variant="primary"
-                          @click="AddCriteria()"
-                          >add criteria</b-button
-                        >
-                      </div>
                     </div>
                   </card>
                 </b-form-group>
@@ -115,14 +111,26 @@
                     <b-col class="text-center">
                       <div v-if="!isLoading">
                         <b-button
-                          class="mr-1"
+                          class="mr-1 btn-fill"
                           type="reset"
                           variant="danger"
                           @click="$router.go(-1)"
-                          >cancel</b-button
+                          >back</b-button
                         >
-                        <b-button type="submit" variant="primary"
-                          >Submit</b-button
+                        <b-button
+                          :disabled="update_view || !is_editable"
+                          type="submit"
+                          class="btn-fill"
+                          variant="primary"
+                          >Save</b-button
+                        >
+                        <b-button
+                          class="ml-1 btn-fill"
+                          :disabled="update_view || !is_editable"
+                          type="reset"
+                          variant="success"
+                          @click="handleVerify"
+                          >verify</b-button
                         >
                       </div>
                       <div v-if="isLoading">
@@ -137,6 +145,11 @@
             </div>
           </card>
         </b-col>
+        <b-col cols="2" md="2" class="my-1">
+          <b-button class="btn-fill" @click="handleUpdate" variant="info"
+            >Update</b-button
+          >
+        </b-col>
       </b-row>
     </b-container>
   </div>
@@ -144,10 +157,8 @@
 
 <script>
 import Event from "@/api/EventApi";
+import User from "@/api/UserApi";
 import VueUploadMultipleImage from "vue-upload-multiple-image";
-import Floor from "@/api/FloorApi";
-import Category from "@/api/CategoryApi";
-
 export default {
   components: {
     VueUploadMultipleImage,
@@ -169,11 +180,13 @@ export default {
         { value: "up", text: "Upper is Better" },
         { value: "down", text: "Lower is Better" },
       ],
+      event_data: {},
       images: [],
       allImage: [],
       angka: 2,
       form: {
         name: "",
+        nik: "",
         content: null,
         start_date: null,
         end_time: null,
@@ -182,10 +195,55 @@ export default {
       options: [],
       show: true,
       messageError: "",
+
       showError: false,
+      update_view: true,
+      is_editable: true,
     };
   },
   methods: {
+    async handleVerify() {
+      try {
+        let data = this.form;
+        data["criteria"] = this.arr_criteria;
+        data["event_id"] = this.$route.params.id_event;
+        let res = await User.UpdateCandidate(
+          this.$route.params.id_candidate + "?type=status",
+          data
+        );
+        if (res.data.success) {
+          this.success = true;
+          this.$notify({
+            message: "success",
+            icon: "fa fa-check-circle",
+            horizontalAlign: "right",
+            verticalAlign: "top",
+            type: "success",
+          });
+          this.$router.push({
+            path: "/admin/verification/c/" + this.$route.params.id_event,
+          });
+          this.isLoading = false;
+        } else {
+          this.isLoading = false;
+          this.showError = true;
+          this.messageError = res.data.message;
+          this.$notify({
+            message: res.data.message,
+            icon: "fa fa-times-circle",
+            horizontalAlign: "right",
+            verticalAlign: "top",
+            type: "danger",
+          });
+        }
+      } catch (err) {
+        this.isLoading = false;
+        console.log(err);
+      }
+    },
+    async handleUpdate() {
+      this.update_view = !this.update_view;
+    },
     async uploadImageSuccess(formData, index, fileList) {
       let imgdata = new FormData();
 
@@ -227,12 +285,19 @@ export default {
     },
     async onSubmit(evt) {
       evt.preventDefault();
+      if (this.form.nik.length != 16) return;
+      if (this.form.name.length > 20) return;
 
       this.isLoading = true;
       let data = this.form;
       data["criteria"] = this.arr_criteria;
+      data["event_id"] = this.$route.params.id_event;
+      // alert(JSON.stringify(this.arr_criteria));
       try {
-        let res = await Event.Add(data);
+        let res = await User.UpdateCandidate(
+          this.$route.params.id_candidate,
+          data
+        );
         if (res.data.success) {
           this.success = true;
           this.$notify({
@@ -243,7 +308,7 @@ export default {
             type: "success",
           });
           this.$router.push({
-            path: "/admin/Event",
+            path: "/admin/verification/c/" + this.$route.params.id_event,
           });
           this.isLoading = false;
         } else {
@@ -264,35 +329,34 @@ export default {
       }
     },
   },
+  computed: {
+    nikState() {
+      return this.form.nik.length == 16 ? true : false;
+    },
+    nameState() {
+      return this.form.name.length <= 20 ? true : false;
+    },
+  },
   async created() {
-    let res_floor = await Floor.GetActive();
-    let res_category = await Category.GetActive();
-    let options_floor = [
-      { value: null, text: "Please select an floor", disabled: true },
-    ];
-    let options_category = [
-      { value: null, text: "Please select an category", disabled: true },
-    ];
+    try {
+      let getdetail = await User.CandidateDetail(
+        this.$route.params.id_candidate
+      );
+      if (getdetail.data.data.status != "new") {
+        this.is_editable = false;
+      }
 
-    res_floor.data.data.map((data) => {
-      data = {
-        value: data._id,
-        text: `${data.name}`,
-      };
-      options_floor.push(data);
-    });
-
-    res_category.data.data.map((data) => {
-      data = {
-        value: data._id,
-        text: `${data.name}`,
-      };
-      options_category.push(data);
-    });
-
-    this.options_floor = options_floor;
-
-    this.options_category = options_category;
+      this.form = getdetail.data.data;
+      this.arr_criteria = getdetail.data.data.criteria_data;
+    } catch (error) {
+      this.$notify({
+        message: "failed get data from backend",
+        icon: "fa fa-times-circle",
+        horizontalAlign: "right",
+        verticalAlign: "top",
+        type: "danger",
+      });
+    }
 
     // console.log(vendor_data[0]._id);
     // this.items = res.data.data;

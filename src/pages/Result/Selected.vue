@@ -2,8 +2,10 @@
   <b-container fluid>
     <!-- User Interface controls -->
     <notifications> </notifications>
-
-    <b-row class="mt-5">
+    <div class="row justify-content-center">
+      <h3>Selected Candidate for {{ event_data.name }}</h3>
+    </div>
+    <b-row class="mt-3">
       <b-col lg="6" class="my-1">
         <b-form-group
           label="Sort"
@@ -41,9 +43,14 @@
           <div class="col-6">
             <button
               class="btn btn-icon btn-primary btn-fill"
-              @click="$router.push({ path: 'tenant/add' })"
+              @click="
+                $router.push({
+                  name: 'add_candidate',
+                  params: { event_id: $route.params.id },
+                })
+              "
             >
-              <i class="nc-icon nc-simple-add"> New Tenant</i>
+              <i class="nc-icon nc-simple-add"> New Candidate</i>
             </button>
           </div>
         </div>
@@ -85,8 +92,11 @@
           class="mb-0"
         >
           <b-form-checkbox-group v-model="filterOn" class="mt-1">
-            <b-form-checkbox value="name">Tenant Name</b-form-checkbox>
-            <b-form-checkbox value="is_active">Active</b-form-checkbox>
+            <b-form-checkbox value="name">Name</b-form-checkbox>
+            <b-form-checkbox value="status">Status</b-form-checkbox>
+            <b-form-checkbox value="rw">rw</b-form-checkbox>
+            <b-form-checkbox value="rt">rt</b-form-checkbox>
+            <b-form-checkbox value="kelurahan">kelurahan</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
       </b-col>
@@ -123,23 +133,34 @@
               {{ row.item.floor_id[0].name }}
             </template> -->
             <template #cell(actions)="row">
-              <button
+              <b-button
+                @click="
+                  $router.push({
+                    name: 'detail_event_confirm',
+                    params: {
+                      id_candidate: row.item._id,
+                      id_event: $route.params.id,
+                    },
+                  })
+                "
+                class="btn btn-icon btn-info mx-1"
+              >
+                <i class="fa fa-edit"></i>show detail</b-button
+              >
+              <!-- <b-collapse :id="'collapse-' + row.item._id">
+                <b-card>{{ row.item._id }}</b-card>
+              </b-collapse> -->
+              <!-- <button
                 class="btn btn-icon btn-info mx-1"
                 @click="
                   $router.push({
-                    name: 'update_tenant',
+                    name: 'confirm_event',
                     params: { id: row.item._id },
                   })
                 "
               >
-                <i class="fa fa-edit"></i>
-              </button>
-              <button
-                class="btn btn-icon btn-danger mx-1"
-                @click="info(row.item, row.index, $event.target)"
-              >
-                <i class="fa fa-trash"></i>
-              </button>
+                <i class="fa fa-edit"></i>detail
+              </button> -->
             </template>
           </b-table>
         </card>
@@ -181,11 +202,11 @@
     <b-modal
       @ok="handleOk(infoModal.content)"
       :id="infoModal.id"
-      :title="'Delete ' + infoModal.content._id"
+      :title="'Delete ' + infoModal.name"
       @hide="resetInfoModal"
     >
       <pre>
-are you sure want to delete <strong>{{ infoModal.title }} </strong>from Tenant list ?</pre>
+are you sure want to delete <strong>{{ infoModal.title }} </strong>from Event list ?</pre>
     </b-modal>
   </b-container>
 </template>
@@ -193,8 +214,9 @@ are you sure want to delete <strong>{{ infoModal.title }} </strong>from Tenant l
 <script>
 import Card from "src/components/Cards/Card.vue";
 import LoadingTable from "src/components/LoadingTable.vue";
+import User from "@/api/UserApi";
 
-import Tenant from "@/api/TenantApi";
+import Event from "@/api/EventApi";
 
 export default {
   components: {
@@ -205,6 +227,21 @@ export default {
     return {
       success: false,
       items: [],
+      event_data: null,
+      month_name: [
+        "januari",
+        "februari",
+        "maret",
+        "april",
+        "mei",
+        "juni",
+        "juli",
+        "agustus",
+        "september",
+        "oktober",
+        "november",
+        "desember",
+      ],
       isLoading: false,
       failed: false,
       type: ["success", "danger"],
@@ -215,43 +252,41 @@ export default {
       fields: [
         {
           key: "name",
-          label: "Tenant name",
+          label: "name",
           sortable: true,
           sortDirection: "desc",
         },
         {
-          key: "category",
-          label: "category",
+          key: "status",
+          label: "status",
           sortable: true,
-          formatter: (value, key, item) => {
-            return item.category_id[0].name;
-          },
           sortDirection: "desc",
-          sortByFormatted: true,
-          filterByFormatted: true,
         },
         {
-          key: "floor",
-          label: "floor",
+          key: "phone",
+          label: "phone",
           sortable: true,
-          formatter: (value, key, item) => {
-            return item.floor_id[0].name;
-          },
           sortDirection: "desc",
-          sortByFormatted: true,
-          filterByFormatted: true,
+        },
+        {
+          key: "rt",
+          label: "rt",
+          sortable: true,
+          sortDirection: "desc",
+        },
+        {
+          key: "rw",
+          label: "rw",
+          sortable: true,
+          sortDirection: "desc",
+        },
+        {
+          key: "kelurahan",
+          label: "kelurahan",
+          sortable: true,
+          sortDirection: "desc",
         },
 
-        {
-          key: "is_active",
-          label: "status",
-          formatter: (value, key, item) => {
-            return value ? "Yes" : "No";
-          },
-          sortable: true,
-          sortByFormatted: true,
-          filterByFormatted: true,
-        },
         { key: "actions", label: "Actions" },
       ],
       totalRows: 1,
@@ -302,7 +337,7 @@ export default {
       this.failed = false;
 
       try {
-        let res = await Tenant.Delete(id);
+        let res = await Event.Delete(id);
         console.log(res);
         if (res.data.success) {
           this.success = true;
@@ -323,7 +358,6 @@ export default {
       alert(`You want to delete row with id: ${row.item._id}`);
     },
     info(item, index, button) {
-      console.log(item);
       this.infoModal.title = `${item.name}`;
       this.infoModal.content = item._id;
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
@@ -339,12 +373,21 @@ export default {
     },
     async loadStart() {
       try {
+        let getdetail = await Event.Detail(this.$route.params.id);
+        this.event_data = getdetail.data.data;
         this.isLoading = true;
-        let res = await Tenant.Get();
+        let res = await User.Cadidate(this.$route.params.id);
         this.items = res.data.data;
         this.totalRows = this.items.length;
         this.isLoading = false;
       } catch (error) {
+        this.$notify({
+          message: "failed get data from server",
+          icon: "fa fa-times",
+          horizontalAlign: "center",
+          verticalAlign: "top",
+          type: "danger",
+        });
         console.log(error);
       }
     },

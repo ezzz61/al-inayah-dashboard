@@ -41,9 +41,9 @@
           <div class="col-6">
             <button
               class="btn btn-icon btn-primary btn-fill"
-              @click="$router.push({ path: 'event/add' })"
+              @click="$router.push({ name: 'User_add' })"
             >
-              <i class="nc-icon nc-simple-add"> New Event</i>
+              <i class="nc-icon nc-simple-add"> New User</i>
             </button>
           </div>
         </div>
@@ -127,7 +127,7 @@
                 class="btn btn-icon btn-info mx-1"
                 @click="
                   $router.push({
-                    name: 'update_event',
+                    name: 'User_update',
                     params: { id: row.item._id },
                   })
                 "
@@ -194,7 +194,7 @@ are you sure want to delete <strong>{{ infoModal.title }} </strong>from Event li
 import Card from "src/components/Cards/Card.vue";
 import LoadingTable from "src/components/LoadingTable.vue";
 
-import Event from "@/api/EventApi";
+import User from "@/api/UserApi";
 
 export default {
   components: {
@@ -228,34 +228,35 @@ export default {
 
       fields: [
         {
-          key: "name",
-          label: "event name",
+          key: "username",
+          label: "username",
           sortable: true,
           sortDirection: "desc",
         },
         {
-          key: "status",
-          label: "status",
+          key: "rt",
+          label: "rt",
           sortable: true,
           sortDirection: "desc",
         },
 
         {
-          key: "end_time",
-          label: "end time",
+          key: "rw",
+          label: "rw",
           sortable: true,
-          formatter: (value, key, item) => {
-            return (
-              new Date(item.end_time).getDate().toString() +
-              " " +
-              this.month_name[new Date(item.end_time).getMonth()] +
-              " " +
-              new Date(item.end_time).getFullYear().toString().substr(-2)
-            );
-          },
           sortDirection: "desc",
-          sortByFormatted: true,
-          filterByFormatted: true,
+        },
+        {
+          key: "kelurahan",
+          label: "kelurahan",
+          sortable: true,
+          sortDirection: "desc",
+        },
+        {
+          key: "role",
+          label: "role",
+          sortable: true,
+          sortDirection: "desc",
         },
 
         { key: "actions", label: "Actions" },
@@ -308,8 +309,7 @@ export default {
       this.failed = false;
 
       try {
-        let res = await Event.Delete(id);
-        console.log(res);
+        let res = await User.Delete(id);
         if (res.data.success) {
           this.success = true;
           this.notifyVue();
@@ -329,7 +329,7 @@ export default {
       alert(`You want to delete row with id: ${row.item._id}`);
     },
     info(item, index, button) {
-      this.infoModal.title = `${item.name}`;
+      this.infoModal.title = `${item.username}`;
       this.infoModal.content = item._id;
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
@@ -345,7 +345,7 @@ export default {
     async loadStart() {
       try {
         this.isLoading = true;
-        let res = await Event.Get();
+        let res = await User.Get();
         this.items = res.data.data;
         this.totalRows = this.items.length;
         this.isLoading = false;
