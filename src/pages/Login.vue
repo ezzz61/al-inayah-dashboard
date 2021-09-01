@@ -1,11 +1,11 @@
 <template>
-  <div class="login">
+  <div style="padding-top: 30vh; padding-bottom: 30vh" class="login bg-dark">
     <b-container>
       <b-row class="justify-content-center mt-5">
         <b-col md="4" class="text-center">
           <b-card-group deck>
             <b-card
-              header="Gaia admin site"
+              header="SPK ADMIN SITE"
               header-tag="header"
               footer="Welcome"
               footer-tag="footer"
@@ -26,7 +26,7 @@
                     v-model="form.username"
                     type="text"
                     required
-                    placeholder="Enter email"
+                    placeholder="Enter username"
                   ></b-form-input>
                 </b-form-group>
 
@@ -86,11 +86,9 @@ export default {
           username: this.form.username,
           password: this.form.password,
         });
-
         if (res.data.token) {
           try {
             var expired = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-
             let data_user = await this.$jwtDec.decode(res.data.token);
             this.$cookie.set("token", res.data.token, {
               expires: expired,
@@ -111,9 +109,6 @@ export default {
           } catch (err) {
             console.log(err);
           }
-          // console.log(role.role);
-          // console.log(this.$jwtDec);
-
           this.isLoading = false;
         } else {
           this.isLoading = false;

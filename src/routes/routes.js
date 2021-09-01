@@ -13,7 +13,6 @@ import Icons from 'src/pages/Icons.vue'
 import Maps from 'src/pages/Maps.vue'
 import Notifications from 'src/pages/Notifications.vue'
 import Upgrade from 'src/pages/Upgrade.vue'
-import Floor from 'src/pages/Floor/Floor.vue'
 
 
 const routes = [
@@ -38,11 +37,8 @@ const routes = [
         name: 'Overview',
         component: Overview
       },
-      {
-        path: 'floor',
-        name: 'floor',
-        component: Floor
-      },
+
+
       {
         path: 'verification',
         name: 'verification',
@@ -122,36 +118,8 @@ const routes = [
         component: () => import('src/pages/Event/Update.vue'),
 
       },
-      {
-        path: 'blog',
-        name: 'blog',
-        component: () => import('src/pages/Blog/Blog.vue'),
 
-      },
-      {
-        path: 'blog/add',
-        name: 'add_blog',
-        component: () => import('src/pages/Blog/Add.vue'),
 
-      },
-      {
-        path: 'blog/update/:id',
-        name: 'update_blog',
-        component: () => import('src/pages/Blog/Update.vue'),
-
-      },
-      {
-        path: 'floor/add',
-        name: 'add_floor',
-        component: () => import('src/pages/Floor/Add.vue'),
-
-      },
-      {
-        path: 'floor/update/:id',
-        name: 'update_floor',
-        component: () => import('src/pages/Floor/Update.vue'),
-
-      },
       {
         path: 'user',
         name: 'User',

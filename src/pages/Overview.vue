@@ -5,11 +5,11 @@
         <div class="col-xl-3 col-md-6">
           <stats-card>
             <div slot="header" class="icon-warning">
-              <i class="nc-icon nc-cart-simple text-primary"></i>
+              <i class="nc-icon nc-bullet-list-67 text-primary"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Tenant List</p>
-              <h4 class="card-title">{{ data.tenant.total }}</h4>
+              <p class="card-category">Running Event total</p>
+              <h4 class="card-title">{{ data.total_event_ongoing }}</h4>
             </div>
             <div slot="footer"><i class="fa fa-calendar-o"></i>until now</div>
           </stats-card>
@@ -18,11 +18,11 @@
         <div class="col-xl-3 col-md-6">
           <stats-card>
             <div slot="header" class="icon-success">
-              <i class="nc-icon nc-air-baloon text-success"></i>
+              <i class="nc-icon nc-circle-09 text-success"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Event & promotions</p>
-              <h4 class="card-title">{{ data.event.total }}</h4>
+              <p class="card-category">Candidate total</p>
+              <h4 class="card-title">{{ data.total_candidate }}</h4>
             </div>
             <div slot="footer"><i class="fa fa-calendar-o"></i>until now</div>
           </stats-card>
@@ -31,11 +31,11 @@
         <div class="col-xl-3 col-md-6">
           <stats-card>
             <div slot="header" class="icon-danger">
-              <i class="nc-icon nc-ruler-pencil text-warning"></i>
+              <i class="nc-icon nc-check-2 text-warning"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Blog</p>
-              <h4 class="card-title">{{ data.blog.total }}</h4>
+              <p class="card-category">Finish event</p>
+              <h4 class="card-title">{{ data.total_event_finish }}</h4>
             </div>
             <div slot="footer"><i class="fa fa-calendar-o"></i>Until now</div>
           </stats-card>
@@ -44,11 +44,11 @@
         <div class="col-xl-3 col-md-6">
           <stats-card>
             <div slot="header" class="icon-info">
-              <i class="nc-icon nc-tag-content text-danger"></i>
+              <i class="nc-icon nc-single-02 text-danger"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Tenant categories</p>
-              <h4 class="card-title">{{ data.category.total }}</h4>
+              <p class="card-category">User total</p>
+              <h4 class="card-title">{{ data.total_user }}</h4>
             </div>
             <div slot="footer"><i class="fa fa-calendar-o"></i>until now</div>
           </stats-card>
@@ -58,12 +58,15 @@
         <div class="col-md-8">
           <card>
             <template slot="header">
-              <h4 class="card-title">New Event & promotion</h4>
-              <p class="card-category">5 newest event & promotions</p>
+              <h4 class="card-title">New Event</h4>
+              <p class="card-category">5 newest event</p>
 
               <!-- <p class="card-category">24 Hours performance</p> -->
             </template>
-            <l-table :data="data.event.data" :columns="tableData.columns">
+            <l-table
+              :data="data.new_event"
+              :columns="['created date', 'event name']"
+            >
               <template slot-scope="{ row }">
                 <td class="text-muted">
                   {{
@@ -75,7 +78,7 @@
                   }}
                 </td>
                 <td>
-                  {{ row.title }}
+                  {{ row.name }}
                 </td>
               </template>
             </l-table>
@@ -85,9 +88,9 @@
         <div class="col-md-4">
           <card>
             <template slot="header">
-              <h4 class="card-title">List Tenant Category</h4>
+              <h4 class="card-title">Candidate Lastest added</h4>
             </template>
-            <l-table :data="data.category.data" :columns="tableData.columns">
+            <l-table :data="data.candidate_last" :columns="['name']">
               <template slot="columns"></template>
               <template slot-scope="{ row }">
                 <td>
@@ -103,19 +106,13 @@
         <div class="col-md-6">
           <card>
             <template slot="header">
-              <h4 class="card-title">Tenant List</h4>
-              <p class="card-category">5 tenant last added</p>
+              <h4 class="card-title">List Kelurahan</h4>
             </template>
-            <l-table :data="data.tenant.data" :columns="tableData.columns">
+            <l-table :data="data.kelurahan" :columns="tableData.columns">
               <!-- <template slot="columns"></template> -->
               <template slot-scope="{ row }">
                 <td>
-                  {{ row.name }}
-                </td>
-                <td>
-                  <b-badge pill variant="primary">{{
-                    row.category_id.name
-                  }}</b-badge>
+                  {{ row }}
                 </td>
               </template>
             </l-table>
@@ -125,24 +122,20 @@
         <div class="col-md-6">
           <card>
             <template slot="header">
-              <h4 class="card-title">Lastest blog post</h4>
-              <p class="card-category">5 Lastest blog post</p>
+              <h4 class="card-title">Sumary Event running</h4>
             </template>
-            <l-table :data="data.blog.data" :columns="tableData.columns">
+            <l-table
+              :data="data.sumary_event"
+              :columns="['event name', 'total candidates']"
+            >
               <!-- <template slot="columns"></template> -->
 
               <template slot-scope="{ row }">
                 <td class="text-muted">
-                  {{
-                    new Date(row.created_at).getDate().toString() +
-                    " " +
-                    month_name[new Date(row.created_at).getDate()] +
-                    " " +
-                    new Date(row.created_at).getFullYear().toString().substr(-2)
-                  }}
+                  {{ row.event.name }}
                 </td>
                 <td>
-                  {{ row.title }}
+                  {{ row.count_candidate }}
                 </td>
               </template>
             </l-table>
@@ -183,18 +176,10 @@ export default {
       editTooltip: "Edit Task",
       deleteTooltip: "Remove",
       data: {
-        event: {
-          total: 0,
-        },
-        blog: {
-          total: 0,
-        },
-        tenant: {
-          total: 0,
-        },
-        category: {
-          total: 0,
-        },
+        total_event_finish: 0,
+        total_event_ongoing: 0,
+        total_candidate: 0,
+        total_user: 0,
       },
 
       isLoading: false,
@@ -226,14 +211,21 @@ export default {
     };
   },
   async created() {
-    // try {
-    //   this.isLoading = true;
-    //   let res = await Dashboard.Get();
-    //   this.data = res.data.data;
-    //   this.isLoading = false;
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      this.isLoading = true;
+      let res = await Dashboard.Get();
+      this.data = res.data.data;
+      this.isLoading = false;
+    } catch (error) {
+      console.log(error);
+      this.$notify({
+        message: "somehting went wrong",
+        icon: "fa  fa-exclamation-circle",
+        horizontalAlign: "right",
+        verticalAlign: "top",
+        type: "danger",
+      });
+    }
   },
 };
 </script>

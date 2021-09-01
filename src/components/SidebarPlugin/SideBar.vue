@@ -47,7 +47,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: "Gaia Admin",
+      default: "SPK ADMIN",
     },
     backgroundColor: {
       type: String,

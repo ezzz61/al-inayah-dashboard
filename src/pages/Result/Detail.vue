@@ -43,7 +43,7 @@
           <div class="col-6">
             <button
               class="btn btn-icon btn-success btn-fill"
-              @click="this.alert('not avaible now')"
+              @click="handleExport()"
             >
               <i class="nc-icon nc-cloud-upload-94"> Export to excel</i>
             </button>
@@ -364,10 +364,25 @@ export default {
       this.infoModal.title = "";
       this.infoModal.content = "";
     },
+
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
+    },
+    async handleExport() {
+      let export_data = await Event.Export(this.$route.params.id);
+      if (export_data.data.success) {
+        window.location.href = "http://" + export_data.data.data.url;
+      } else {
+        this.$notify({
+          message: "error when generate report",
+          icon: "fa fa-times",
+          horizontalAlign: "center",
+          verticalAlign: "top",
+          type: "danger",
+        });
+      }
     },
     async loadStart() {
       try {
@@ -375,7 +390,10 @@ export default {
         this.event_data = getdetail.data.data;
         this.isLoading = true;
         let res = await User.Cadidate(this.$route.params.id);
-        this.items = res.data.data;
+        this.items = res.data.data.sort(function (a, b) {
+          return b.score - a.score;
+        });
+
         this.totalRows = this.items.length;
         this.isLoading = false;
       } catch (error) {

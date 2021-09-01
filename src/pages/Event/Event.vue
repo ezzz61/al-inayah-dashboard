@@ -347,6 +347,7 @@ export default {
         this.isLoading = true;
         let res = await Event.Get();
         this.items = res.data.data;
+
         this.totalRows = this.items.length;
         this.isLoading = false;
       } catch (error) {

@@ -133,6 +133,7 @@
                         >
                         <b-button
                           class="btn-fill"
+                          v-if="role == 'kecamatan'"
                           :disabled="!is_editable"
                           type="submit"
                           variant="primary"
@@ -141,12 +142,15 @@
                         <b-button
                           class="ml-1 btn-fill"
                           @click="Handlepublish"
+                          v-if="role == 'kecamatan'"
                           :disabled="!is_editable"
                           variant="success"
                           >Publish</b-button
                         >
                         <b-button
-                          v-if="form.status == 'published'"
+                          v-if="
+                            form.status == 'published' && role == 'kecamatan'
+                          "
                           class="ml-1 btn-fill"
                           @click="HandleFinish"
                           variant="info"
@@ -180,6 +184,7 @@ export default {
   },
   data() {
     return {
+      role: null,
       options_floor: [{ value: null, text: "Please select an floor" }],
       options_category: [{ value: null, text: "Please select an floor" }],
       selected: null,
@@ -386,6 +391,10 @@ export default {
   },
   async created() {
     try {
+      let data = JSON.parse(this.$cookie.get("data_user"));
+      if (data) {
+        this.role = data.role_id.name;
+      }
       let getdetail = await Event.Detail(this.$route.params.id);
       if (getdetail.data.data.status != "new") {
         this.is_editable = false;

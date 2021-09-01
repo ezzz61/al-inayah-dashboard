@@ -11,8 +11,8 @@
         <i class="nc-icon nc-square-pin"></i>
         <p>Event</p>
       </sidebar-link>
-      <sidebar-link to="/admin/user">
-        <i class="nc-icon nc-square-pin"></i>
+      <sidebar-link v-if="data.role_id.name == 'kecamatan'" to="/admin/user">
+        <i class="nc-icon nc-single-02"></i>
         <p>User</p>
       </sidebar-link>
       <sidebar-link to="/admin/verification">
@@ -20,12 +20,8 @@
         <p>verification</p>
       </sidebar-link>
       <sidebar-link to="/admin/result">
-        <i class="nc-icon nc-cart-simple"></i>
+        <i class="nc-icon nc-chart-bar-32"></i>
         <p>Result</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/report">
-        <i class="nc-icon nc-air-baloon"></i>
-        <p>Report</p>
       </sidebar-link>
 
       <!-- <sidebar-link to="/admin/notifications">
@@ -54,12 +50,13 @@ export default {
     return {
       name: "",
       role: "",
+      data: null,
     };
   },
   created() {
     let token = this.$cookie.get("token");
     let data = JSON.parse(this.$cookie.get("data_user"));
-    console.log(data);
+    this.data = data;
     if (this.$cookie.get("data_user") && this.$cookie.get("token")) {
       if (token !== null && data.role == "admin") {
         this.role = "admin";

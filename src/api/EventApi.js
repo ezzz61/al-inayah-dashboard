@@ -23,4 +23,7 @@ export default {
   Finish(id) {
     return Api().put('/event/finish/' + id)
   },
+  Export(id) {
+    return Api().get('/event/export/' + id)
+  },
 }

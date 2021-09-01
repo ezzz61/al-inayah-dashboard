@@ -146,7 +146,11 @@
           </card>
         </b-col>
         <b-col cols="2" md="2" class="my-1">
-          <b-button class="btn-fill" @click="handleUpdate" variant="info"
+          <b-button
+            v-if="(role == 'kelurahan' || role == 'rtrw') && is_editable"
+            class="btn-fill"
+            @click="handleUpdate"
+            variant="info"
             >Update</b-button
           >
         </b-col>
@@ -165,6 +169,7 @@ export default {
   },
   data() {
     return {
+      role: null,
       options_floor: [{ value: null, text: "Please select an floor" }],
       options_category: [{ value: null, text: "Please select an floor" }],
       selected: null,
@@ -339,6 +344,10 @@ export default {
   },
   async created() {
     try {
+      let data = JSON.parse(this.$cookie.get("data_user"));
+      if (data) {
+        this.role = data.role_id.name;
+      }
       let getdetail = await User.CandidateDetail(
         this.$route.params.id_candidate
       );

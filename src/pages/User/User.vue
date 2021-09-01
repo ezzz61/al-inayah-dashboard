@@ -85,8 +85,8 @@
           class="mb-0"
         >
           <b-form-checkbox-group v-model="filterOn" class="mt-1">
-            <b-form-checkbox value="name">Event Name</b-form-checkbox>
-            <b-form-checkbox value="status">Status</b-form-checkbox>
+            <b-form-checkbox value="username">username</b-form-checkbox>
+            <b-form-checkbox value="kelurahan">kelurahan</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
       </b-col>
@@ -185,7 +185,7 @@
       @hide="resetInfoModal"
     >
       <pre>
-are you sure want to delete <strong>{{ infoModal.title }} </strong>from Event list ?</pre>
+are you sure want to delete <strong>{{ infoModal.title }} </strong>from User list ?</pre>
     </b-modal>
   </b-container>
 </template>

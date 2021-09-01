@@ -42,6 +42,7 @@
         <div class="row justify-content-center">
           <div class="col-6">
             <button
+              v-if="role == 'rtrw'"
               class="btn btn-icon btn-primary btn-fill"
               @click="
                 $router.push({
@@ -199,7 +200,7 @@
       </b-col>
     </div>
     <!-- Info modal -->
-    <b-modal
+    <!-- <b-modal
       @ok="handleOk(infoModal.content)"
       :id="infoModal.id"
       :title="'Delete ' + infoModal.name"
@@ -207,7 +208,7 @@
     >
       <pre>
 are you sure want to delete <strong>{{ infoModal.title }} </strong>from Event list ?</pre>
-    </b-modal>
+    </b-modal> -->
   </b-container>
 </template>
 
@@ -227,6 +228,7 @@ export default {
     return {
       success: false,
       items: [],
+      role: null,
       event_data: null,
       month_name: [
         "januari",
@@ -357,11 +359,11 @@ export default {
     handleDelete(row) {
       alert(`You want to delete row with id: ${row.item._id}`);
     },
-    info(item, index, button) {
-      this.infoModal.title = `${item.name}`;
-      this.infoModal.content = item._id;
-      this.$root.$emit("bv::show::modal", this.infoModal.id, button);
-    },
+    // info(item, index, button) {
+    //   this.infoModal.title = `${item.name}`;
+    //   this.infoModal.content = item._id;
+    //   this.$root.$emit("bv::show::modal", this.infoModal.id, button);
+    // },
     resetInfoModal() {
       this.infoModal.title = "";
       this.infoModal.content = "";
@@ -393,6 +395,11 @@ export default {
     },
   },
   created() {
+    let data = JSON.parse(this.$cookie.get("data_user"));
+    if (data) {
+      this.role = data.role_id.name;
+    }
+    console.log(data);
     this.loadStart();
   },
 };
