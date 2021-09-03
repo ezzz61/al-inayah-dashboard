@@ -14,7 +14,7 @@ export default () => {
     headers: {
       Authorization: localStorage.getItem("token") ? localStorage.getItem("token") : null
     },
-    baseURL: `http://127.0.0.1:8888`
+    baseURL: `https://skripsi-servers.herokuapp.com`
   })
   instance.interceptors.response.use(function (response) {
     if (response.data.status == 402) {

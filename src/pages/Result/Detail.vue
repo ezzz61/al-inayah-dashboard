@@ -374,6 +374,7 @@ export default {
       let export_data = await Event.Export(this.$route.params.id);
       if (export_data.data.success) {
         window.location.href = "http://" + export_data.data.data.url;
+        window.open("http://" + export_data.data.data.url, "_blank");
       } else {
         this.$notify({
           message: "error when generate report",
