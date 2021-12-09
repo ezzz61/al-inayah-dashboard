@@ -3,17 +3,16 @@
     <div class="container-fluid">
       Welcome back
       <span class="font-weight-bold mx-1 mb-"> {{ " " + name }}!</span>
-
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <button
               @click="$router.push({ path: '/admin/user' })"
               class="btn btn-secondary btn-simple"
             >
               Account
             </button>
-          </li>
+          </li> -->
           <li class="nav-item">
             <button @click="handlelogout" class="btn btn-primary">
               Logout
@@ -27,17 +26,17 @@
 <script>
 export default {
   props: {
-    name: String,
+    name: String
   },
   computed: {
     routeName() {
       const { name } = this.$route;
       return this.capitalizeFirstLetter(name);
-    },
+    }
   },
   data() {
     return {
-      activeNotifications: false,
+      activeNotifications: false
     };
   },
   methods: {
@@ -63,9 +62,8 @@ export default {
     },
     hideSidebar() {
       this.$sidebar.displaySidebar(false);
-    },
-  },
+    }
+  }
 };
 </script>
-<style>
-</style>
+<style></style>

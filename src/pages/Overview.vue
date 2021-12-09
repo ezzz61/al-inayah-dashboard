@@ -8,8 +8,8 @@
               <i class="nc-icon nc-bullet-list-67 text-primary"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Running Event total</p>
-              <h4 class="card-title">{{ data.total_event_ongoing }}</h4>
+              <p class="card-category">Article total</p>
+              <h4 class="card-title">{{ data.total_article }}</h4>
             </div>
             <div slot="footer"><i class="fa fa-calendar-o"></i>until now</div>
           </stats-card>
@@ -18,11 +18,15 @@
         <div class="col-xl-3 col-md-6">
           <stats-card>
             <div slot="header" class="icon-success">
-              <i class="nc-icon nc-circle-09 text-success"></i>
+              <i
+                class="nc-icon nc-grid-45
+
+ text-success"
+              ></i>
             </div>
             <div slot="content">
-              <p class="card-category">Candidate total</p>
-              <h4 class="card-title">{{ data.total_candidate }}</h4>
+              <p class="card-category">total forum topic</p>
+              <h4 class="card-title">{{ data.total_forum }}</h4>
             </div>
             <div slot="footer"><i class="fa fa-calendar-o"></i>until now</div>
           </stats-card>
@@ -31,11 +35,11 @@
         <div class="col-xl-3 col-md-6">
           <stats-card>
             <div slot="header" class="icon-danger">
-              <i class="nc-icon nc-check-2 text-warning"></i>
+              <i class="nc-icon nc-chat-round text-warning"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Finish event</p>
-              <h4 class="card-title">{{ data.total_event_finish }}</h4>
+              <p class="card-category">Total reply forum</p>
+              <h4 class="card-title">{{ data.total_reply }}</h4>
             </div>
             <div slot="footer"><i class="fa fa-calendar-o"></i>Until now</div>
           </stats-card>
@@ -64,21 +68,24 @@
               <!-- <p class="card-category">24 Hours performance</p> -->
             </template>
             <l-table
-              :data="data.new_event"
+              :data="data.last_article"
               :columns="['created date', 'event name']"
             >
               <template slot-scope="{ row }">
                 <td class="text-muted">
                   {{
                     new Date(row.created_at).getDate().toString() +
-                    " " +
-                    month_name[new Date(row.created_at).getMonth()] +
-                    " " +
-                    new Date(row.created_at).getFullYear().toString().substr(-2)
+                      " " +
+                      month_name[new Date(row.created_at).getMonth()] +
+                      " " +
+                      new Date(row.created_at)
+                        .getFullYear()
+                        .toString()
+                        .substr(-2)
                   }}
                 </td>
                 <td>
-                  {{ row.name }}
+                  {{ row.title }}
                 </td>
               </template>
             </l-table>
@@ -88,13 +95,13 @@
         <div class="col-md-4">
           <card>
             <template slot="header">
-              <h4 class="card-title">Candidate Lastest added</h4>
+              <h4 class="card-title">user Lastest registered</h4>
             </template>
-            <l-table :data="data.candidate_last" :columns="['name']">
+            <l-table :data="data.last_user" :columns="['name']">
               <template slot="columns"></template>
               <template slot-scope="{ row }">
                 <td>
-                  {{ row.name }}
+                  {{ row.email }}
                 </td>
               </template>
             </l-table>
@@ -106,13 +113,25 @@
         <div class="col-md-6">
           <card>
             <template slot="header">
-              <h4 class="card-title">List Kelurahan</h4>
+              <h4 class="card-title">Last forum added</h4>
             </template>
-            <l-table :data="data.kelurahan" :columns="tableData.columns">
+            <l-table :data="data.new_forum" :columns="['title', 'date']">
               <!-- <template slot="columns"></template> -->
               <template slot-scope="{ row }">
                 <td>
-                  {{ row }}
+                  {{ row.title }}
+                </td>
+                <td>
+                  {{
+                    new Date(row.created_at).getDate().toString() +
+                      " " +
+                      month_name[new Date(row.created_at).getMonth()] +
+                      " " +
+                      new Date(row.created_at)
+                        .getFullYear()
+                        .toString()
+                        .substr(-2)
+                  }}
                 </td>
               </template>
             </l-table>
@@ -122,20 +141,32 @@
         <div class="col-md-6">
           <card>
             <template slot="header">
-              <h4 class="card-title">Sumary Event running</h4>
+              <h4 class="card-title">Last post forum</h4>
             </template>
             <l-table
-              :data="data.sumary_event"
-              :columns="['event name', 'total candidates']"
+              :data="data.new_reply"
+              :columns="['reply by', 'forum', 'date']"
             >
               <!-- <template slot="columns"></template> -->
 
               <template slot-scope="{ row }">
                 <td class="text-muted">
-                  {{ row.event.name }}
+                  {{ row.created_by ? row.created_by.email : "deleted user" }}
                 </td>
                 <td>
-                  {{ row.count_candidate }}
+                  {{ row.topic_id.title }}
+                </td>
+                <td>
+                  {{
+                    new Date(row.created_at).getDate().toString() +
+                      " " +
+                      month_name[new Date(row.created_at).getMonth()] +
+                      " " +
+                      new Date(row.created_at)
+                        .getFullYear()
+                        .toString()
+                        .substr(-2)
+                  }}
                 </td>
               </template>
             </l-table>
@@ -155,7 +186,7 @@ export default {
   components: {
     LTable,
     ChartCard,
-    StatsCard,
+    StatsCard
   },
   data() {
     return {
@@ -171,7 +202,7 @@ export default {
         "sept",
         "okt",
         "nov",
-        "des",
+        "des"
       ],
       editTooltip: "Edit Task",
       deleteTooltip: "Remove",
@@ -179,7 +210,7 @@ export default {
         total_event_finish: 0,
         total_event_ongoing: 0,
         total_candidate: 0,
-        total_user: 0,
+        total_user: 0
       },
 
       isLoading: false,
@@ -188,32 +219,33 @@ export default {
           {
             title:
               'Sign contract for "What are conference organizers afraid of?"',
-            checked: false,
+            checked: false
           },
           {
             title:
               "Lines From Great Russian Literature? Or E-mails From My Boss?",
-            checked: true,
+            checked: true
           },
           {
             title:
               "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
-            checked: true,
+            checked: true
           },
           {
             title: "Create 4 Invisible User Experiences you Never Knew About",
-            checked: false,
+            checked: false
           },
           { title: 'Read "Following makes Medium better"', checked: false },
-          { title: "Unfollow 5 enemies from twitter", checked: false },
-        ],
-      },
+          { title: "Unfollow 5 enemies from twitter", checked: false }
+        ]
+      }
     };
   },
   async created() {
     try {
       this.isLoading = true;
       let res = await Dashboard.Get();
+      console.log(res.data.data);
       this.data = res.data.data;
       this.isLoading = false;
     } catch (error) {
@@ -223,11 +255,10 @@ export default {
         icon: "fa  fa-exclamation-circle",
         horizontalAlign: "right",
         verticalAlign: "top",
-        type: "danger",
+        type: "danger"
       });
     }
-  },
+  }
 };
 </script>
-<style>
-</style>
+<style></style>

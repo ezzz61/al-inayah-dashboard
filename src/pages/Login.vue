@@ -23,10 +23,10 @@
                 <b-form-group id="input-group-1" label-for="input-1">
                   <b-form-input
                     id="input-1"
-                    v-model="form.username"
+                    v-model="form.email"
                     type="text"
                     required
-                    placeholder="Enter username"
+                    placeholder="Enter email"
                   ></b-form-input>
                 </b-form-group>
 
@@ -68,12 +68,12 @@ export default {
   data() {
     return {
       form: {
-        username: "",
-        password: "",
+        email: "",
+        password: ""
       },
       isLoading: false,
       error: [],
-      show: true,
+      show: true
     };
   },
   methods: {
@@ -83,18 +83,18 @@ export default {
       this.isLoading = true;
       try {
         let res = await Login.Login({
-          username: this.form.username,
-          password: this.form.password,
+          email: this.form.email,
+          password: this.form.password
         });
         if (res.data.token) {
           try {
             var expired = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
             let data_user = await this.$jwtDec.decode(res.data.token);
             this.$cookie.set("token", res.data.token, {
-              expires: expired,
+              expires: expired
             });
             this.$cookie.set("data_user", JSON.stringify(data_user), {
-              expires: expired,
+              expires: expired
             });
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("data_user", JSON.stringify(data_user));
@@ -103,7 +103,7 @@ export default {
               icon: "fa fa-check-circle",
               horizontalAlign: "center",
               verticalAlign: "top",
-              type: "success",
+              type: "success"
             });
             this.$router.push({ path: "/admin" });
           } catch (err) {
@@ -118,7 +118,7 @@ export default {
         this.isLoading = false;
         this.error.push("something went wrong");
       }
-    },
+    }
   },
   created() {
     let token = localStorage.getItem("token");
@@ -127,6 +127,6 @@ export default {
     if (token !== null && data !== null) {
       this.$router.push({ path: "/" });
     }
-  },
+  }
 };
 </script>

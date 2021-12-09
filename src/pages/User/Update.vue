@@ -14,7 +14,21 @@
               <b-form @submit="onSubmit">
                 <b-form-group
                   id="input-group-1"
-                  label=" userName:"
+                  label=" email*:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="Event"
+                    v-model="form.email"
+                    type="text"
+                    required
+                    placeholder=" email ex: andimalaran@mail.com"
+                  ></b-form-input>
+                </b-form-group>
+
+                <b-form-group
+                  id="input-group-1"
+                  label="username:"
                   label-for="input-1"
                 >
                   <b-form-input
@@ -22,98 +36,72 @@
                     v-model="form.username"
                     type="text"
                     required
-                    placeholder=" username ex: andimalaran"
+                    placeholder="full name , ex: doni wihaya"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label=" phone:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="Event"
+                    v-model="form.phone"
+                    type="text"
+                    required
+                    placeholder=" phone ex: 08512555121"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label="full name:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="Event"
+                    v-model="form.name"
+                    type="text"
+                    required
+                    placeholder="full name , ex: doni wihaya"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label="fav game:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="Event"
+                    v-model="form.game_fav"
+                    type="text"
+                    required
+                    placeholder="game fav : mobile legend"
                   ></b-form-input>
                 </b-form-group>
 
                 <b-form-group
                   id="input-group-1"
-                  label=" first name:"
+                  label="subscription:"
                   label-for="input-1"
                 >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.firstname"
-                    type="text"
-                    required
-                    placeholder="firstname ex: andi"
-                  ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label=" last name:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.lastname"
-                    type="text"
-                    required
-                    placeholder="last name ex: malaranggi"
-                  ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label="Rt:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.rt"
-                    type="text"
-                    required
-                    placeholder="rt name ex: 07"
-                  ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label="Rw:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.rw"
-                    type="text"
-                    required
-                    placeholder="Rw name ex: 12"
-                  ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label="Kelurahan:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.kelurahan"
-                    type="text"
-                    required
-                    placeholder="kelurahan, ex: sindangsari"
-                  ></b-form-input>
+                  <b-form-checkbox
+                    v-model="form.subscription"
+                    switch
+                    size="lg"
+                    >{{
+                      form.subscription ? "Active" : "Unactive"
+                    }}</b-form-checkbox
+                  >
                 </b-form-group>
 
                 <b-form-group
                   id="input-group-1"
-                  label="Address:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.address"
-                    type="text"
-                    required
-                    placeholder="address ex: perumahan taman walet"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                  id="input-group-1"
-                  label="Role:"
+                  label="Role*:"
                   label-for="input-1"
                 >
                   <b-form-select
-                    v-model="form.role_id"
-                    :options="options_data"
+                    v-model="form.role"
+                    :options="['admin', 'user']"
                     size="l"
                     class="mt-2"
                   ></b-form-select>
@@ -159,7 +147,7 @@ import Category from "@/api/CategoryApi";
 
 export default {
   components: {
-    VueUploadMultipleImage,
+    VueUploadMultipleImage
   },
   data() {
     return {
@@ -170,13 +158,13 @@ export default {
         {
           name: "input criteria name ex: Gaji",
           point: 100,
-          type: null,
-        },
+          type: null
+        }
       ],
       options_data: [
         { value: null, text: "Please select type", disabled: true },
         { value: "up", text: "Upper is Better" },
-        { value: "down", text: "Lower is Better" },
+        { value: "down", text: "Lower is Better" }
       ],
       images: [],
       allImage: [],
@@ -186,13 +174,13 @@ export default {
         name: "",
         content: null,
         start_date: null,
-        end_time: null,
+        end_time: null
       },
       isLoading: false,
       options: [],
       show: true,
       messageError: "",
-      showError: false,
+      showError: false
     };
   },
   methods: {
@@ -213,7 +201,7 @@ export default {
       this.arr_criteria.push({
         name: "input criteria name ex: Gaji",
         point: 0,
-        type: null,
+        type: null
       });
     },
     beforeRemove(index, done, fileList) {
@@ -249,10 +237,10 @@ export default {
             icon: "fa fa-check-circle",
             horizontalAlign: "right",
             verticalAlign: "top",
-            type: "success",
+            type: "success"
           });
           this.$router.push({
-            path: "/admin/user",
+            path: "/admin/user"
           });
           this.isLoading = false;
         } else {
@@ -264,24 +252,19 @@ export default {
             icon: "fa fa-times-circle",
             horizontalAlign: "right",
             verticalAlign: "top",
-            type: "danger",
+            type: "danger"
           });
         }
       } catch (err) {
         this.isLoading = false;
         console.log(err);
       }
-    },
+    }
   },
   async created() {
     try {
       let getdetail = await User.Detail(this.$route.params.id);
-      let get_role = await User.Role();
-      if (get_role.data.data) {
-        this.options_data = get_role.data.data.map((el) => {
-          return { value: el._id, text: el.name };
-        });
-      }
+
       this.form = getdetail.data.data;
     } catch (error) {
       console.log(error);
@@ -290,12 +273,12 @@ export default {
         icon: "fa fa-times-circle",
         horizontalAlign: "right",
         verticalAlign: "top",
-        type: "danger",
+        type: "danger"
       });
     }
 
     // console.log(vendor_data[0]._id);
     // this.items = res.data.data;
-  },
+  }
 };
 </script>

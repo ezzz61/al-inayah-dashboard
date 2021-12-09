@@ -14,20 +14,21 @@
               <b-form @submit="onSubmit">
                 <b-form-group
                   id="input-group-1"
-                  label=" userName:"
+                  label=" email*:"
                   label-for="input-1"
                 >
                   <b-form-input
                     id="Event"
-                    v-model="form.username"
+                    v-model="form.email"
                     type="text"
                     required
-                    placeholder=" username ex: andimalaran"
+                    placeholder=" email ex: andimalaran@mail.com"
                   ></b-form-input>
                 </b-form-group>
+
                 <b-form-group
                   id="input-group-1"
-                  label="Password:"
+                  label=" password*:"
                   label-for="input-1"
                 >
                   <b-form-input
@@ -35,97 +36,84 @@
                     v-model="form.password"
                     type="password"
                     required
-                    placeholder="password"
                   ></b-form-input>
                 </b-form-group>
                 <b-form-group
                   id="input-group-1"
-                  label=" first name:"
+                  label="username:"
                   label-for="input-1"
                 >
                   <b-form-input
                     id="Event"
-                    v-model="form.firstname"
+                    v-model="form.username"
                     type="text"
                     required
-                    placeholder="firstname ex: andi"
+                    placeholder="full name , ex: doni wihaya"
                   ></b-form-input>
                 </b-form-group>
                 <b-form-group
                   id="input-group-1"
-                  label=" last name:"
+                  label=" phone:"
                   label-for="input-1"
                 >
                   <b-form-input
                     id="Event"
-                    v-model="form.lastname"
+                    v-model="form.phone"
                     type="text"
                     required
-                    placeholder="last name ex: malaranggi"
+                    placeholder=" phone ex: 08512555121"
                   ></b-form-input>
                 </b-form-group>
                 <b-form-group
                   id="input-group-1"
-                  label="Rt:"
+                  label="full name:"
                   label-for="input-1"
                 >
                   <b-form-input
                     id="Event"
-                    v-model="form.rt"
+                    v-model="form.name"
                     type="text"
                     required
-                    placeholder="rt name ex: 07"
+                    placeholder="full name , ex: doni wihaya"
                   ></b-form-input>
                 </b-form-group>
                 <b-form-group
                   id="input-group-1"
-                  label="Rw:"
+                  label="fav game:"
                   label-for="input-1"
                 >
                   <b-form-input
                     id="Event"
-                    v-model="form.rw"
+                    v-model="form.game_fav"
                     type="text"
                     required
-                    placeholder="Rw name ex: 12"
-                  ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label="Kelurahan:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.kelurahan"
-                    type="text"
-                    required
-                    placeholder="kelurahan, ex: sindangsari"
+                    placeholder="game fav : mobile legend"
                   ></b-form-input>
                 </b-form-group>
 
                 <b-form-group
                   id="input-group-1"
-                  label="Address:"
+                  label="subscription:"
                   label-for="input-1"
                 >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.address"
-                    type="text"
-                    required
-                    placeholder="address ex: perumahan taman walet"
-                  ></b-form-input>
+                  <b-form-checkbox
+                    v-model="form.subscription"
+                    switch
+                    size="lg"
+                    >{{
+                      form.subscription ? "Active" : "Unactive"
+                    }}</b-form-checkbox
+                  >
                 </b-form-group>
 
                 <b-form-group
                   id="input-group-1"
-                  label="Role:"
+                  label="Role*:"
                   label-for="input-1"
                 >
                   <b-form-select
-                    v-model="form.role_id"
-                    :options="options_data"
+                    v-model="form.role"
+                    :options="['admin', 'user']"
                     size="l"
                     class="mt-2"
                   ></b-form-select>
@@ -173,7 +161,7 @@ import Category from "@/api/CategoryApi";
 
 export default {
   components: {
-    VueUploadMultipleImage,
+    VueUploadMultipleImage
   },
   data() {
     return {
@@ -184,8 +172,8 @@ export default {
         {
           name: "input criteria name ex: Gaji",
           point: 100,
-          type: null,
-        },
+          type: null
+        }
       ],
       options_data: [],
       images: [],
@@ -196,12 +184,13 @@ export default {
         content: null,
         start_date: null,
         end_time: null,
+        role: "user"
       },
       isLoading: false,
       options: [],
       show: true,
       messageError: "",
-      showError: false,
+      showError: false
     };
   },
   methods: {
@@ -222,7 +211,7 @@ export default {
       this.arr_criteria.push({
         name: "input criteria name ex: Gaji",
         point: 0,
-        type: null,
+        type: null
       });
     },
     beforeRemove(index, done, fileList) {
@@ -259,10 +248,10 @@ export default {
             icon: "fa fa-check-circle",
             horizontalAlign: "right",
             verticalAlign: "top",
-            type: "success",
+            type: "success"
           });
           this.$router.push({
-            path: "/admin/user",
+            path: "/admin/user"
           });
           this.isLoading = false;
         } else {
@@ -274,25 +263,18 @@ export default {
             icon: "fa fa-times-circle",
             horizontalAlign: "right",
             verticalAlign: "top",
-            type: "danger",
+            type: "danger"
           });
         }
       } catch (err) {
         this.isLoading = false;
         console.log(err);
       }
-    },
+    }
   },
   async created() {
-    let get_role = await User.Role();
-    if (get_role.data.data) {
-      this.options_data = get_role.data.data.map((el) => {
-        return { value: el._id, text: el.name };
-      });
-    }
-
     // console.log(vendor_data[0]._id);
     // this.items = res.data.data;
-  },
+  }
 };
 </script>

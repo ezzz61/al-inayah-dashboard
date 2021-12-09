@@ -13,45 +13,46 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
  */
-import VueNotify from 'vue-notifyjs'
-import 'vue-notifyjs/themes/default.css'
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import App from './App.vue'
-import { BootstrapVue } from 'bootstrap-vue'
-import VueJwtDecode from 'vue-jwt-decode'
-import VueCookie from 'vue-cookie'
+import VueNotify from "vue-notifyjs";
+import "vue-notifyjs/themes/default.css";
+import Vue from "vue";
+import VueRouter from "vue-router";
+import App from "./App.vue";
+import { BootstrapVue } from "bootstrap-vue";
+import VueJwtDecode from "vue-jwt-decode";
+import VueCookie from "vue-cookie";
+import CKEditor from "ckeditor4-vue";
 
 // LightBootstrap plugin
-import LightBootstrap from './light-bootstrap-main'
+import LightBootstrap from "./light-bootstrap-main";
 
 // router setup
-import routes from './routes/routes'
+import routes from "./routes/routes";
 
-import './registerServiceWorker'
+import "./registerServiceWorker";
 // plugin setup
-Vue.use(VueCookie)
-Vue.use(VueNotify)
+Vue.use(VueCookie);
+Vue.use(VueNotify);
+Vue.use(CKEditor);
+Vue.use(BootstrapVue);
+Vue.use(VueJwtDecode);
 
-Vue.use(BootstrapVue)
-Vue.use(VueJwtDecode)
-
-Vue.use(VueRouter)
-Vue.use(LightBootstrap)
+Vue.use(VueRouter);
+Vue.use(LightBootstrap);
 
 // configure router
 const router = new VueRouter({
   routes, // short for routes: routes
-  linkActiveClass: 'nav-item active',
-  mode: 'history',
-  scrollBehavior: (to) => {
+  linkActiveClass: "nav-item active",
+  mode: "history",
+  scrollBehavior: to => {
     if (to.hash) {
-      return { selector: to.hash }
+      return { selector: to.hash };
     } else {
-      return { x: 0, y: 0 }
+      return { x: 0, y: 0 };
     }
   }
-})
+});
 // router.beforeEach((to, from, next) => {
 //   if (to.matched.some(record => record.meta.requiresAuth)) {
 //     if (Vue.cookie.get('data_user') === null) {
@@ -101,7 +102,7 @@ const router = new VueRouter({
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
+  el: "#app",
   render: h => h(App),
   router
-})
+});

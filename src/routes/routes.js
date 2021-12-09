@@ -1,87 +1,39 @@
-import DashboardLayout from '../layout/DashboardLayout.vue'
+import DashboardLayout from "../layout/DashboardLayout.vue";
 // GeneralViews
-import NotFound from '../pages/NotFoundPage.vue'
-import Login from 'src/pages/Login.vue'
+import NotFound from "../pages/NotFoundPage.vue";
+import Login from "src/pages/Login.vue";
 
 // Admin pages
-import Overview from 'src/pages/Overview.vue'
+import Overview from "src/pages/Overview.vue";
 
-import UserProfile from 'src/pages/UserProfile.vue'
-import TableList from 'src/pages/TableList.vue'
-import Typography from 'src/pages/Typography.vue'
-import Icons from 'src/pages/Icons.vue'
-import Maps from 'src/pages/Maps.vue'
-import Notifications from 'src/pages/Notifications.vue'
-import Upgrade from 'src/pages/Upgrade.vue'
-
+import TableList from "src/pages/TableList.vue";
+import Typography from "src/pages/Typography.vue";
+import Icons from "src/pages/Icons.vue";
+import Maps from "src/pages/Maps.vue";
+import Notifications from "src/pages/Notifications.vue";
+import Upgrade from "src/pages/Upgrade.vue";
 
 const routes = [
-
   {
-    path: '/',
+    path: "/",
     component: DashboardLayout,
-    redirect: '/admin/overview',
-
+    redirect: "/admin/overview"
   },
   {
-    path: '/login',
-    component: Login,
+    path: "/login",
+    component: Login
   },
   {
-    path: '/admin',
+    path: "/admin",
     component: DashboardLayout,
-    redirect: '/admin/overview',
+    redirect: "/admin/overview",
     children: [
       {
-        path: 'overview',
-        name: 'Overview',
+        path: "overview",
+        name: "Overview",
         component: Overview
       },
 
-
-      {
-        path: 'verification',
-        name: 'verification',
-        component: () => import('src/pages/Verification/Verification.vue'),
-
-      },
-
-      {
-        path: 'verification/c/:id',
-        name: 'confirm_event',
-        component: () => import('src/pages/Verification/Confirmation.vue'),
-      },
-      {
-        path: 'candidate/e/:event_id',
-        name: 'add_candidate',
-        component: () => import('src/pages/Verification/Candidate.vue'),
-      },
-
-
-      {
-        path: 'verification/:id_event/detail/:id_candidate',
-        name: 'detail_event_confirm',
-        component: () => import('src/pages/Verification/VerificationDetail.vue'),
-
-      },
-      {
-        path: 'verification/update/:id',
-        name: 'update_verification',
-        component: () => import('src/pages/Verification/Update.vue'),
-
-      },
-      {
-        path: 'result',
-        name: 'result',
-        component: () => import('src/pages/Result/Result.vue'),
-
-      },
-      {
-        path: 'result/:id',
-        name: 'result_detail',
-        component: () => import('src/pages/Result/Detail.vue'),
-
-      },
       // {
       //   path: 'tenant',
       //   name: 'result',
@@ -100,75 +52,127 @@ const routes = [
       //   component: () => import('src/pages/Tenant/Update.vue'),
 
       // },
-      {
-        path: 'event',
-        name: 'event',
-        component: () => import('src/pages/Event/Event.vue'),
-
-      },
-      {
-        path: 'event/add',
-        name: 'add_event',
-        component: () => import('src/pages/Event/Add.vue'),
-
-      },
-      {
-        path: 'event/update/:id',
-        name: 'update_event',
-        component: () => import('src/pages/Event/Update.vue'),
-
-      },
-
 
       {
-        path: 'user',
-        name: 'User',
-        component: () => import('src/pages/User/User.vue'),
+        path: "Category",
+        name: "Category",
+        component: () => import("src/pages/Category/Category.vue")
       },
       {
-        path: 'user/u/:id',
-        name: 'User_update',
-        component: () => import('src/pages/User/Update.vue'),
+        path: "Category/add",
+        name: "add_Category",
+        component: () => import("src/pages/Category/Add.vue")
       },
       {
-        path: 'user/add',
-        name: 'User_add',
-        component: () => import('src/pages/User/Add.vue'),
+        path: "Category/update/:id",
+        name: "update_Category",
+        component: () => import("src/pages/Category/Update.vue")
       },
       {
-        path: 'table-list',
-        name: 'Table List',
+        path: "Ads",
+        name: "Ads",
+        component: () => import("src/pages/Ads/Ads.vue")
+      },
+      {
+        path: "Ads/add",
+        name: "add_Ads",
+        component: () => import("src/pages/Ads/Add.vue")
+      },
+      {
+        path: "Ads/update/:id",
+        name: "update_ads",
+        component: () => import("src/pages/Ads/Update.vue")
+      },
+      {
+        path: "Article",
+        name: "Article",
+        component: () => import("src/pages/Article/Article.vue")
+      },
+      {
+        path: "Article/add",
+        name: "add_Article",
+        component: () => import("src/pages/Article/Add.vue")
+      },
+      {
+        path: "Article/update/:id",
+        name: "update_Article",
+        component: () => import("src/pages/Article/Update.vue")
+      },
+      {
+        path: "Babes",
+        name: "NiagaBabes",
+        component: () => import("src/pages/NiagaBabes/NiagaBabes.vue")
+      },
+      {
+        path: "Babes/add",
+        name: "add_NiagaBabes",
+        component: () => import("src/pages/NiagaBabes/Add.vue")
+      },
+      {
+        path: "Babes/update/:id",
+        name: "update_NiagaBabes",
+        component: () => import("src/pages/NiagaBabes/Update.vue")
+      },
+      {
+        path: "articletag",
+        name: "articletag",
+        component: () => import("src/pages/ArticleTags/Tag.vue")
+      },
+      {
+        path: "articletag/add",
+        name: "add_articletag",
+        component: () => import("src/pages/ArticleTags/Add.vue")
+      },
+      {
+        path: "articletag/update/:id",
+        name: "update_articletag",
+        component: () => import("src/pages/ArticleTags/Update.vue")
+      },
+
+      {
+        path: "user",
+        name: "User",
+        component: () => import("src/pages/User/User.vue")
+      },
+      {
+        path: "user/u/:id",
+        name: "User_update",
+        component: () => import("src/pages/User/Update.vue")
+      },
+      {
+        path: "user/add",
+        name: "User_add",
+        component: () => import("src/pages/User/Add.vue")
+      },
+      {
+        path: "table-list",
+        name: "Table List",
         component: TableList
       },
       {
-        path: 'typography',
-        name: 'Typography',
+        path: "typography",
+        name: "Typography",
         component: Typography
       },
       {
-        path: 'icons',
-        name: 'Icons',
+        path: "icons",
+        name: "Icons",
         component: Icons
       },
       {
-        path: 'maps',
-        name: 'Maps',
+        path: "maps",
+        name: "Maps",
         component: Maps
       },
       {
-        path: 'notifications',
-        name: 'Notifications',
+        path: "notifications",
+        name: "Notifications",
         component: Notifications
-      },
-      {
-        path: 'upgrade',
-        name: 'Upgrade to PRO',
-        component: Upgrade
       }
     ]
   },
-  { path: '*', component: NotFound }
-]
+  { path: "*", component: NotFound }
+];
 
 /**
  * Asynchronously load view (Webpack Lazy loading compatible)
@@ -179,4 +183,4 @@ function view(name) {
    return res;
 };**/
 
-export default routes
+export default routes;

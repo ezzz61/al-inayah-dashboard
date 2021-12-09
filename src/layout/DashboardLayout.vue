@@ -7,21 +7,38 @@
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Dashboard</p>
       </sidebar-link>
-      <sidebar-link to="/admin/event">
+      <sidebar-link to="/admin/category">
         <i class="nc-icon nc-square-pin"></i>
-        <p>Event</p>
+        <p>Category</p>
       </sidebar-link>
-      <sidebar-link v-if="data.role_id.name == 'kecamatan'" to="/admin/user">
+      <sidebar-link to="/admin/articletag">
+        <i
+          class="nc-icon nc-tag-content
+
+"
+        ></i>
+        <p>Article Tag</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/article">
+        <i
+          class="nc-icon       nc-bullet-list-67
+
+"
+        ></i>
+        <p>Article</p>
+      </sidebar-link>
+
+      <sidebar-link to="/admin/user">
         <i class="nc-icon nc-single-02"></i>
         <p>User</p>
       </sidebar-link>
-      <sidebar-link to="/admin/verification">
+      <sidebar-link to="/admin/ads">
         <i class="nc-icon nc-tag-content"></i>
-        <p>verification</p>
+        <p>Ads</p>
       </sidebar-link>
-      <sidebar-link to="/admin/result">
-        <i class="nc-icon nc-chart-bar-32"></i>
-        <p>Result</p>
+      <sidebar-link to="/admin/babes">
+        <i class="nc-icon nc-satisfied"></i>
+        <p>Babes</p>
       </sidebar-link>
 
       <!-- <sidebar-link to="/admin/notifications">
@@ -38,8 +55,7 @@
     </div>
   </div>
 </template>
-<style lang="scss">
-</style>
+<style lang="scss"></style>
 <script>
 import TopNavbar from "./TopNavbar.vue";
 import ContentFooter from "./ContentFooter.vue";
@@ -50,7 +66,7 @@ export default {
     return {
       name: "",
       role: "",
-      data: null,
+      data: null
     };
   },
   created() {
@@ -73,28 +89,26 @@ export default {
         icon: "fa fa-sign-in-alt",
         horizontalAlign: "right",
         verticalAlign: "top",
-        type: "warning",
+        type: "warning"
       });
 
       this.$router.push({ path: "/login" });
     }
-    this.name = data.username;
-
-    console.log(this.role);
+    this.name = data.email;
   },
 
   components: {
     TopNavbar,
     ContentFooter,
     DashboardContent,
-    MobileMenu,
+    MobileMenu
   },
   methods: {
     toggleSidebar() {
       if (this.$sidebar.showSidebar) {
         this.$sidebar.displaySidebar(false);
       }
-    },
-  },
+    }
+  }
 };
 </script>

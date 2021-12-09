@@ -86,7 +86,7 @@
         >
           <b-form-checkbox-group v-model="filterOn" class="mt-1">
             <b-form-checkbox value="username">username</b-form-checkbox>
-            <b-form-checkbox value="kelurahan">kelurahan</b-form-checkbox>
+            <b-form-checkbox value="role">role</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
       </b-col>
@@ -228,30 +228,13 @@ export default {
 
       fields: [
         {
-          key: "username",
-          label: "username",
+          key: "email",
+          label: "email",
           sortable: true,
           sortDirection: "desc",
         },
-        {
-          key: "rt",
-          label: "rt",
-          sortable: true,
-          sortDirection: "desc",
-        },
-
-        {
-          key: "rw",
-          label: "rw",
-          sortable: true,
-          sortDirection: "desc",
-        },
-        {
-          key: "kelurahan",
-          label: "kelurahan",
-          sortable: true,
-          sortDirection: "desc",
-        },
+      
+       
         {
           key: "role",
           label: "role",
@@ -329,7 +312,7 @@ export default {
       alert(`You want to delete row with id: ${row.item._id}`);
     },
     info(item, index, button) {
-      this.infoModal.title = `${item.username}`;
+      this.infoModal.title = `${item.email}`;
       this.infoModal.content = item._id;
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
