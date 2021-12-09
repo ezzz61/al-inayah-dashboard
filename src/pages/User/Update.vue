@@ -106,7 +106,28 @@
                     class="mt-2"
                   ></b-form-select>
                 </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label="image thumbnail:"
+                  label-for="input-1"
+                >
+                  <b-form-file
+                    @change="onFileChange"
+                    accept="image/*"
+                    v-model="file"
+                    placeholder="choose image"
+                    drop-placeholder="image only"
+                  ></b-form-file>
+                </b-form-group>
 
+                <div class="text-center" v-if="url">
+                  <img
+                    :src="url"
+                    width="300"
+                    height="300"
+                    alt="preview image"
+                  />
+                </div>
                 <b-row class="justify-content-center">
                   <b-col class="text-center">
                     <b-col class="text-center">
@@ -180,10 +201,16 @@ export default {
       options: [],
       show: true,
       messageError: "",
-      showError: false
+      showError: false,
+      file: null,
+      url: null
     };
   },
   methods: {
+    onFileChange(e) {
+      const file = e.target.files[0];
+      this.url = URL.createObjectURL(file);
+    },
     async uploadImageSuccess(formData, index, fileList) {
       let imgdata = new FormData();
 
@@ -231,6 +258,28 @@ export default {
       try {
         let res = await User.Update(this.$route.params.id, data);
         if (res.data.success) {
+          if (this.file) {
+            let form_file = new FormData();
+            form_file.append("file", this.file);
+            let save_image = await User.Upload(
+              this.$route.params.id,
+              form_file,
+              "update"
+            );
+            if (!save_image.data.success) {
+              this.false = true;
+              this.$notify({
+                message: "failed upload",
+                icon: "fa fa-times-circle",
+                horizontalAlign: "right",
+                verticalAlign: "top",
+                type: "danger"
+              });
+
+              this.isLoading = false;
+              return;
+            }
+          }
           this.success = true;
           this.$notify({
             message: "success",
@@ -264,7 +313,9 @@ export default {
   async created() {
     try {
       let getdetail = await User.Detail(this.$route.params.id);
-
+      if (getdetail.data.data.image) {
+        this.url = getdetail.data.data.image;
+      }
       this.form = getdetail.data.data;
     } catch (error) {
       console.log(error);
