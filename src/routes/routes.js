@@ -33,6 +33,11 @@ const routes = [
         name: "Overview",
         component: Overview
       },
+      {
+        path: "setup",
+        name: "setup",
+        component: () => import("src/pages/Setup.vue")
+      },
 
       // {
       //   path: 'tenant',
