@@ -5,7 +5,7 @@
         <b-col md="4" class="text-center">
           <b-card-group deck>
             <b-card
-              header="SPK ADMIN SITE"
+              header="Niagaplay ADMIN SITE"
               header-tag="header"
               footer="Welcome"
               footer-tag="footer"
@@ -90,6 +90,9 @@ export default {
           try {
             var expired = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
             let data_user = await this.$jwtDec.decode(res.data.token);
+            if (data_user.role_id != "admin") {
+              return this.error.push("Unautorize");
+            }
             this.$cookie.set("token", res.data.token, {
               expires: expired
             });
