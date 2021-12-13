@@ -14,7 +14,7 @@ export default () => {
         ? localStorage.getItem("token")
         : null
     },
-    baseURL: `http://localhost:8822/`
+    baseURL: `http://api.niagaplay.com/`
   });
   instance.interceptors.response.use(
     function(response) {
