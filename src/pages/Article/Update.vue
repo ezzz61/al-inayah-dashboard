@@ -217,7 +217,7 @@ export default {
           "Kiwi_maru/Kiwi maru;" +
           "Karla/Karla",
         extraPlugins: "uploadimage,colorbutton, font,uicolor,colordialog ",
-        filebrowserUploadUrl: "http://localhost:8822/UploadStatic",
+        filebrowserUploadUrl: "https://api.niagaplay.com/UploadStatic",
         colorButton_colors:
           "707070,121212,1D4B98,e06040,419f5a,79aacb,ffd44f,f5ede0",
         colorButton_enableMore: true
