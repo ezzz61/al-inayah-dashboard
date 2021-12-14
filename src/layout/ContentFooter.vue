@@ -8,12 +8,11 @@
           </li>
         </ul>
       </nav>
-      <div class="copyright text-center">SPK BANSOS</div>
+      <div class="copyright text-center">Niagaplay</div>
     </div>
   </footer>
 </template>
 <script>
 export default {};
 </script>
-<style>
-</style>
+<style></style>
