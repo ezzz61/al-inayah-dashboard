@@ -245,7 +245,6 @@ export default {
     try {
       this.isLoading = true;
       let res = await Dashboard.Get();
-      console.log(res.data.data);
       this.data = res.data.data;
       this.isLoading = false;
     } catch (error) {

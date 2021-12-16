@@ -124,8 +124,8 @@ export default {
     }
   },
   created() {
-    let token = localStorage.getItem("token");
-    let data = JSON.parse(localStorage.getItem("data_user"));
+    let token = this.$cookie.get("token");
+    let data = this.$cookie.get("data_user");
 
     if (token !== null && data !== null) {
       this.$router.push({ path: "/" });

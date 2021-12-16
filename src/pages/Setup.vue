@@ -2,11 +2,28 @@
   <div class="content">
     <div class="container-fluid">
       <p>url youtube:</p>
-      <b-form-input
-        v-model="url"
-        placeholder="Enter url youtube"
-      ></b-form-input>
-      <b-button @click="handleSave" variant="outline-primary mt-2"
+      <div v-for="(data, i) in url" :key="i">
+        <b-form-input
+          v-if="i == 0"
+          v-model="url[i]"
+          placeholder="Enter url youtube"
+        ></b-form-input>
+        <b-input-group v-else class="mt-3">
+          <template #append>
+            <b-input-group-text style="cursor:pointer" @click="Remove(i)"
+              ><strong class="text-danger">X</strong></b-input-group-text
+            >
+          </template>
+          <b-form-input
+            placeholder="Enter url youtube"
+            v-model="url[i]"
+          ></b-form-input>
+        </b-input-group>
+      </div>
+
+      <b-button class="text-center mt-2" @click="Addmore">add more</b-button>
+      <br />
+      <b-button @click="handleSave" class="outline-primary mt-2"
         >save url</b-button
       >
     </div>
@@ -26,7 +43,7 @@ export default {
   },
   data() {
     return {
-      url: null,
+      url: [""],
       month_name: [
         "jan",
         "feb",
@@ -83,7 +100,8 @@ export default {
       this.isLoading = true;
       let res = await Dashboard.GetUrl();
       this.data = res.data.data;
-      this.url = res.data.data.url_home;
+
+      this.url = res.data.data.video_url ? res.data.data.video_url : [""];
       this.isLoading = false;
     } catch (error) {
       console.log(error);
@@ -97,8 +115,16 @@ export default {
     }
   },
   methods: {
+    Addmore() {
+      this.url.push(null);
+    },
+    Remove(index) {
+      this.url.splice(index, 1);
+    },
     async handleSave() {
-      let save = await Dashboard.SaveUrl({ url: this.url });
+      let url_data = this.url.filter(el => el != null);
+      let save = await Dashboard.SaveUrl({ url: url_data });
+      console.log(url_data);
       if (save.data.success) {
         this.$notify({
           message: "sucesss",

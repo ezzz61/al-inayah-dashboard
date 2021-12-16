@@ -58,7 +58,7 @@
                 >
                   <b-form-select
                     v-model="form.type"
-                    :options="['sidebar', 'main']"
+                    :options="['sidebar', 'main', 'article']"
                     size="l"
                     class="mt-2"
                   ></b-form-select>
