@@ -73,6 +73,7 @@ const routes = [
         name: "update_Category",
         component: () => import("src/pages/Category/Update.vue")
       },
+
       {
         path: "Ads",
         name: "Ads",
@@ -87,6 +88,36 @@ const routes = [
         path: "Ads/update/:id",
         name: "update_ads",
         component: () => import("src/pages/Ads/Update.vue")
+      },
+      {
+        path: "faqcategory",
+        name: "faqcategory",
+        component: () => import("src/pages/FaqCategory/FaqCategory.vue")
+      },
+      {
+        path: "faqcategory/add",
+        name: "add_faqcategory",
+        component: () => import("src/pages/FaqCategory/Add.vue")
+      },
+      {
+        path: "faqcategory/update/:id",
+        name: "update_faqcategory",
+        component: () => import("src/pages/FaqCategory/Update.vue")
+      },
+      {
+        path: "Faq",
+        name: "Faq",
+        component: () => import("src/pages/Faq/Faq.vue")
+      },
+      {
+        path: "Faq/add",
+        name: "add_Faq",
+        component: () => import("src/pages/Faq/Add.vue")
+      },
+      {
+        path: "Faq/update/:id",
+        name: "update_Faq",
+        component: () => import("src/pages/Faq/Update.vue")
       },
       {
         path: "Article",

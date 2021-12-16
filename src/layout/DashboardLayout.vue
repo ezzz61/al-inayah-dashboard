@@ -40,6 +40,14 @@
         <i class="nc-icon nc-satisfied"></i>
         <p>Babes</p>
       </sidebar-link>
+      <sidebar-link to="/admin/faqcategory">
+        <i class="nc-icon nc-notes"></i>
+        <p>Faq Category</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/faq">
+        <i class="nc-icon nc-bulb-63"></i>
+        <p>Faq</p>
+      </sidebar-link>
       <sidebar-link to="/admin/setup">
         <i class="nc-icon nc-settings-tool-66"></i>
         <p>Setup</p>
