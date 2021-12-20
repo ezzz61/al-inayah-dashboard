@@ -30,14 +30,19 @@
                   label="Answer:"
                   label-for="input-1"
                 >
-                  <b-form-textarea
+                  <ckeditor
+                    tag-name="textarea"
+                    v-model="form.answer"
+                    :config="editorConfig"
+                  ></ckeditor>
+                  <!-- <b-form-textarea
                     id="Faq body"
                     v-model="form.answer"
                     placeholder="answer for the question ? "
                     rows="3"
                     max-rows="6"
                     required
-                  ></b-form-textarea>
+                  ></b-form-textarea> -->
                 </b-form-group>
 
                 <b-form-group

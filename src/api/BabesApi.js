@@ -18,6 +18,9 @@ export default {
   },
   Upload(id, data, source) {
     return Api().post("talent/upload/" + id + "?source=" + source, data);
+  },
+  UploadCollection(id, data) {
+    return Api().post("talent/collection/" + id, data);
   }
   // UploadBanner(id, data, source) {
   //   return Api().post(

@@ -128,6 +128,68 @@
                 </div>
 
                 <b-form-group
+                  v-if="form.photo_collection.length > 0"
+                  id="input-group-1"
+                  label="photo collections:"
+                  label-for="input-1"
+                >
+                  <div class="text-center">
+                    <div class="row justify-content-center">
+                      <b-col
+                        v-for="(set, i) in form.photo_collection"
+                        :key="i"
+                        cols="4"
+                      >
+                        <img
+                          :src="set"
+                          width="200"
+                          height="200"
+                          alt="preview image"
+                        />
+                        <br />
+                        <div
+                          class="mt-2 btn btn-icon btn-danger btn-fill"
+                          @click="DeleteUrl(i)"
+                        >
+                          <i
+                            class="nc-icon nc-simple-remove
+
+"
+                          ></i>
+                        </div>
+                      </b-col>
+                    </div>
+                  </div>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
+                  label="image collection"
+                  label-for="input-1"
+                >
+                  <div class="row justify-content-center">
+                    <div
+                      class="col-4 justify-content-center align-items-center"
+                      style="display: grid !important;"
+                    >
+                      <vue-upload-multiple-image
+                        @upload-success="uploadImageSuccess"
+                        @before-remove="beforeRemove"
+                        @edit-image="editImage"
+                        @mark-is-primary="defaultImage"
+                        :data-images="images"
+                        browseText="choose image"
+                        idUpload="a"
+                        name="a"
+                        dragText="drag here"
+                        multiple
+                        primaryText="default"
+                        markIsPrimaryText="set as default"
+                      ></vue-upload-multiple-image>
+                    </div>
+                  </div>
+                </b-form-group>
+
+                <b-form-group
                   id="input-group-1"
                   label="Status:"
                   label-for="input-1"
@@ -204,7 +266,7 @@ export default {
           "Kiwi_maru/Kiwi maru;" +
           "Karla/Karla",
         extraPlugins: "uploadimage,colorbutton, font,uicolor,colordialog ",
-        filebrowserUploadUrl: "http://localhost:8822/UploadStatic",
+        filebrowserUploadUrl: "https://api.niagaplay.com/UploadStatic",
         colorButton_colors:
           "707070,121212,1D4B98,e06040,419f5a,79aacb,ffd44f,f5ede0",
         colorButton_enableMore: true
@@ -216,7 +278,6 @@ export default {
       selected: null,
 
       images: [],
-      allImage: [],
       urlBanner: null,
       fileBanner: null,
       url: null,
@@ -231,38 +292,61 @@ export default {
         type: "main",
         category_id: null,
         Babes_type_id: null,
-        potition_type: "default"
+        potition_type: "default",
+        photo_collection: []
       },
       isLoading: false,
       options: [],
       show: true,
       messageError: "",
-      showError: false
+      showError: false,
+      count_img: 0,
+      allImage: [],
+      images: [],
+      imgdata: {},
+      files: []
     };
   },
   methods: {
-    onFileChangeBanner(e) {
-      const file = e.target.files[0];
-      this.urlBanner = URL.createObjectURL(file);
+    defaultImage(index, done) {
+      let flag = 0,
+        arr = [];
+      this.files.map((f, index) => {
+        if (f.name == done[0].name) flag = index;
+      });
+      for (const [index, pair] of this.files.entries()) {
+        if (index == 0) {
+          arr.push(this.files[flag]);
+          arr.push(pair);
+        } else if (index == flag) {
+          continue;
+        } else {
+          arr.push(pair);
+        }
+      }
+      this.files = arr;
     },
-    onFileChange(e) {
-      const file = e.target.files[0];
-      this.url = URL.createObjectURL(file);
+    editImage(formData) {
+      let imgdata = new FormData();
+      for (var pair of formData.entries()) {
+        imgdata.append(pair[0], pair[1]);
+        this.files.push(pair[1]);
+      }
+      this.allImage = imgdata;
     },
     async uploadImageSuccess(formData, index, fileList) {
       let imgdata = new FormData();
-
       if (fileList.length < 5) {
         for (var pair of formData.entries()) {
           imgdata.append(pair[0], pair[1]);
-          this.allImage.push(pair[1]);
+          this.files.push(pair[1]);
         }
+        this.allImage = imgdata;
+      } else {
+        alert("max 5 image");
       }
     },
-
     beforeRemove(index, done, fileList) {
-      console.log("index", index, fileList);
-
       var r = confirm("remove image");
       if (r == true) {
         done();
@@ -273,12 +357,20 @@ export default {
         this.allImage = null;
       }
     },
-    editImage(formData, index, fileList) {
-      for (var pair of formData.entries()) {
-        imgdata.append(pair[0], pair[1]);
-        this.allImage.push(pair[1]);
-      }
+    onFileChangeBanner(e) {
+      const file = e.target.files[0];
+      this.urlBanner = URL.createObjectURL(file);
     },
+    onFileChange(e) {
+      const file = e.target.files[0];
+      this.url = URL.createObjectURL(file);
+    },
+
+    DeleteUrl(index) {
+      this.form.photo_collection.splice(index, 1);
+      // this.form.photo_collection.slice()
+    },
+
     async onSubmit(evt) {
       evt.preventDefault();
 
@@ -287,6 +379,14 @@ export default {
       try {
         let res = await Babes.Update(this.$route.params.id, data);
         if (res.data.success) {
+          const setdata = new FormData();
+          for (var x = 0; x < this.files.length; x++) {
+            setdata.append("file", this.files[x]);
+          }
+          let up_status = await Babes.UploadCollection(
+            this.$route.params.id,
+            setdata
+          );
           if (this.file) {
             let form_file = new FormData();
             form_file.append("file", this.file);
@@ -351,6 +451,9 @@ export default {
       }
       if (getdetail.data.data.image) {
         this.url = getdetail.data.data.image;
+      }
+      if (getdetail.data.data.photo_collection) {
+        this.form.photo_collection = getdetail.data.data.photo_collection;
       }
       if (getdetail.data.data.banner_img) {
         this.urlBanner = getdetail.data.data.banner_img;

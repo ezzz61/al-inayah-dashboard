@@ -126,7 +126,64 @@
                     alt="preview image"
                   />
                 </div>
+                <b-form-group
+                  id="input-group-1"
+                  label="image collection"
+                  label-for="input-1"
+                >
+                  <div class="row justify-content-center">
+                    <div
+                      class="col-4 justify-content-center align-items-center"
+                      style="display: grid !important;"
+                    >
+                      <vue-upload-multiple-image
+                        @upload-success="uploadImageSuccess"
+                        @before-remove="beforeRemove"
+                        @edit-image="editImage"
+                        @mark-is-primary="defaultImage"
+                        :data-images="images"
+                        browseText="choose image"
+                        idUpload="a"
+                        name="a"
+                        dragText="drag here"
+                        multiple
+                        primaryText="default"
+                        markIsPrimaryText="set as default"
+                      ></vue-upload-multiple-image>
+                    </div>
+                  </div>
+                </b-form-group>
+                <!-- <hr />
+                <div :key="i" v-for="(file, i) in count_img">
+                  <b-form-group
+                    id="input-group-1"
+                    label="image collection:"
+                    label-for="input-1"
+                  >
+                    <b-form-file
+                      @change="onCollectionChange(i)"
+                      accept="image/*"
+                      v-model="file_colection[i]"
+                      placeholder="choose image"
+                      drop-placeholder="image only"
+                    ></b-form-file>
+                  </b-form-group>
+                  <div class="text-center" v-if="url[i]">
+                    <img
+                      :src="url[i]"
+                      width="300"
+                      height="300"
+                      alt="preview image"
+                    />
+                  </div>
+                </div>
+                <div class="text-center">
+                  <b-button @click="AddImage" class="btn-fill" variant="primary"
+                    >Add Another Image</b-button
+                  >
+                </div>
 
+                <hr /> -->
                 <b-form-group
                   id="input-group-1"
                   label="Status:"
@@ -205,7 +262,7 @@ export default {
           "Kiwi_maru/Kiwi maru;" +
           "Karla/Karla",
         extraPlugins: "uploadimage,colorbutton, font,uicolor,colordialog ",
-        filebrowserUploadUrl: "http://localhost:8822/UploadStatic",
+        filebrowserUploadUrl: "https://api.niagaplay.com/UploadStatic",
         colorButton_colors:
           "707070,121212,1D4B98,e06040,419f5a,79aacb,ffd44f,f5ede0",
         colorButton_enableMore: true
@@ -215,15 +272,14 @@ export default {
       ],
       option_tag: [{ value: null, text: "Please select tag", disabled: true }],
       selected: null,
-
       images: [],
       allImage: [],
       url: null,
       urlBanner: null,
       angka: 2,
-      file: null,
       fileBanner: null,
       form: {
+        username: "",
         name: "",
         content: null,
         start_date: null,
@@ -238,10 +294,74 @@ export default {
       options: [],
       show: true,
       messageError: "",
-      showError: false
+      showError: false,
+      url_collection: [],
+      file_colection: [],
+      count_img: 0,
+      allImage: [],
+      images: [],
+      imgdata: {},
+      file: null,
+      files: []
     };
   },
   methods: {
+    defaultImage(index, done) {
+      let flag = 0,
+        arr = [];
+      this.files.map((f, index) => {
+        if (f.name == done[0].name) flag = index;
+      });
+      for (const [index, pair] of this.files.entries()) {
+        if (index == 0) {
+          arr.push(this.files[flag]);
+          arr.push(pair);
+        } else if (index == flag) {
+          continue;
+        } else {
+          arr.push(pair);
+        }
+      }
+      this.files = arr;
+    },
+    editImage(formData) {
+      let imgdata = new FormData();
+      for (var pair of formData.entries()) {
+        imgdata.append(pair[0], pair[1]);
+        this.files.push(pair[1]);
+      }
+      this.allImage = imgdata;
+    },
+    async uploadImageSuccess(formData, index, fileList) {
+      let imgdata = new FormData();
+      if (fileList.length < 5) {
+        for (var pair of formData.entries()) {
+          imgdata.append(pair[0], pair[1]);
+          this.files.push(pair[1]);
+        }
+        this.allImage = imgdata;
+      } else {
+        alert("max 5 image");
+      }
+    },
+    beforeRemove(index, done, fileList) {
+      var r = confirm("remove image");
+      if (r == true) {
+        done();
+      } else {
+        console.log("x");
+      }
+      if (fileList.length === 0) {
+        this.allImage = null;
+      }
+    },
+    AddImage() {
+      this.count_img++;
+    },
+    onCollectionChange(i) {
+      const file = e.target.files[0];
+      this.url_collection[i] = URL.createObjectURL(file);
+    },
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
@@ -250,16 +370,16 @@ export default {
       const file = e.target.files[0];
       this.urlBanner = URL.createObjectURL(file);
     },
-    async uploadImageSuccess(formData, index, fileList) {
-      let imgdata = new FormData();
+    // async uploadImageSuccess(formData, index, fileList) {
+    //   let imgdata = new FormData();
 
-      if (fileList.length < 5) {
-        for (var pair of formData.entries()) {
-          imgdata.append(pair[0], pair[1]);
-          this.allImage.push(pair[1]);
-        }
-      }
-    },
+    //   if (fileList.length < 5) {
+    //     for (var pair of formData.entries()) {
+    //       imgdata.append(pair[0], pair[1]);
+    //       this.allImage.push(pair[1]);
+    //     }
+    //   }
+    // },
     RemoveCriteria(index) {
       this.arr_criteria.splice(index, 1);
     },
@@ -307,6 +427,12 @@ export default {
         let res = await Babes.Add(data);
 
         if (res.data.success) {
+          const setdata = new FormData();
+          for (var x = 0; x < this.files.length; x++) {
+            setdata.append("file", this.files[x]);
+          }
+          await Babes.UploadCollection(res.data.data._id, setdata);
+
           if (this.file) {
             let form_file = new FormData();
             form_file.append("file", this.file);
