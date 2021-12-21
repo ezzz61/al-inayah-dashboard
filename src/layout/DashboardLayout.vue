@@ -82,30 +82,29 @@ export default {
     };
   },
   created() {
-    let token = this.$cookie.get("token");
-    let data = JSON.parse(this.$cookie.get("data_user"));
-    this.data = data;
-    if (this.$cookie.get("data_user") && this.$cookie.get("token")) {
-      if (token !== null && data.role == "admin") {
-        this.role = "admin";
-      } else if (token !== null && data.role == "super admin") {
-        this.role = "super admin";
-      }
-    } else {
-      this.$router.push({ path: "/login" });
-    }
+    let data = JSON.parse(localStorage.getItem("data_user"));
+    // this.data = data;
+    // if (localStorage.getItem("data_user") && localStorage.getItem("token")) {
+    //   if (token !== null && data.role == "admin") {
+    //     this.role = "admin";
+    //   } else if (token !== null && data.role == "super admin") {
+    //     this.role = "super admin";
+    //   }
+    // } else {
+    //   this.$router.push({ path: "/login" });
+    // }
 
-    if (data.username === null) {
-      this.$notify({
-        message: "please login again",
-        icon: "fa fa-sign-in-alt",
-        horizontalAlign: "right",
-        verticalAlign: "top",
-        type: "warning"
-      });
+    // if (data.username === null) {
+    //   this.$notify({
+    //     message: "please login again",
+    //     icon: "fa fa-sign-in-alt",
+    //     horizontalAlign: "right",
+    //     verticalAlign: "top",
+    //     type: "warning"
+    //   });
 
-      this.$router.push({ path: "/login" });
-    }
+    //   this.$router.push({ path: "/login" });
+    // }
     this.name = data.email;
   },
 
