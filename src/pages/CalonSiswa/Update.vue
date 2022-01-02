@@ -333,7 +333,7 @@
                           variant="danger"
                           @click="
                             $router.push({
-                              path: '/admin/pepeling',
+                              path: '/admin/calon-siswa',
                             })
                           "
                           >{{

@@ -162,7 +162,7 @@
       @hide="resetInfoModal"
     >
       <pre>
-are you sure want to delete <strong>{{ infoModal.title }} </strong>from Article list ?</pre>
+are you sure want to delete <strong>{{ infoModal.title }} </strong>from Pepeling list ?</pre>
     </b-modal>
   </b-container>
 </template>

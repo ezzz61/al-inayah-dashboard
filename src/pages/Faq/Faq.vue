@@ -87,8 +87,7 @@
           <b-form-checkbox-group v-model="filterOn" class="mt-1">
             <b-form-checkbox value="title">Faq Name</b-form-checkbox>
             <b-form-checkbox value="is_active">Status</b-form-checkbox>
-                        <b-form-checkbox value="category_id.name">category</b-form-checkbox>
-
+            <b-form-checkbox value="category_id.name">category</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
       </b-col>
@@ -196,8 +195,6 @@ are you sure want to delete <strong>{{ infoModal.title }} </strong>from Faq list
 import Card from "src/components/Cards/Card.vue";
 import LoadingTable from "src/components/LoadingTable.vue";
 
-import Faq from "@/api/FaqApi";
-
 export default {
   components: {
     Card,
@@ -235,18 +232,16 @@ export default {
           sortable: true,
           sortDirection: "desc",
         },
-      
+
         {
           key: "is_active",
           label: "status",
           sortable: true,
           sortDirection: "desc",
-            formatter: (value, key, item) => {
-            return item.is_active == true ? 'Active' : 'Unactive'
+          formatter: (value, key, item) => {
+            return item.is_active == true ? "Active" : "Unactive";
           },
         },
-
-     
 
         { key: "actions", label: "Actions" },
       ],
@@ -280,76 +275,76 @@ export default {
     // Set the initial number of items
     this.totalRows = this.items.length;
   },
-  methods: {
-    notifyVue() {
-      const notification = {
-        template: `<span>Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for every web developer.</span>`,
-      };
-      this.$notify({
-        message: "success",
-        icon: "fa fa-check-circle",
-        horizontalAlign: "right",
-        verticalAlign: "top",
-        type: "success",
-      });
-    },
-    async handleOk(id) {
-      this.success = false;
-      this.failed = false;
+  // methods: {
+  //   notifyVue() {
+  //     const notification = {
+  //       template: `<span>Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for every web developer.</span>`,
+  //     };
+  //     this.$notify({
+  //       message: "success",
+  //       icon: "fa fa-check-circle",
+  //       horizontalAlign: "right",
+  //       verticalAlign: "top",
+  //       type: "success",
+  //     });
+  //   },
+  //   async handleOk(id) {
+  //     this.success = false;
+  //     this.failed = false;
 
-      try {
-        let res = await Faq.Delete(id);
-        if (res.data.success) {
-          this.success = true;
-          this.notifyVue();
-          this.loFaqtart();
-        } else {
-          this.failed = true;
-        }
-      } catch (err) {
-        this.isLoading = false;
-        console.log(err);
-      }
-    },
-    handleEdit(row) {
-      alert(`You want to edit row with id: ${row.item._id}`);
-    },
-    handleDelete(row) {
-      alert(`You want to delete row with id: ${row.item._id}`);
-    },
-    info(item, index, button) {
-      this.infoModal.title = `${item.question}`;
-      this.infoModal.content = item._id;
-      this.$root.$emit("bv::show::modal", this.infoModal.id, button);
-    },
-    resetInfoModal() {
-      this.infoModal.title = "";
-      this.infoModal.content = "";
-    },
-    onFiltered(filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
-      this.totalRows = filteredItems.length;
-      this.currentPage = 1;
-    },
-    async loFaqtart() {
-      try {
-        this.isLoading = true;
-        let res = await Faq.GetAll();
-        this.items = res.data.data;
-        this.totalRows = this.items.length;
-        this.isLoading = false;
-      } catch (error) {
-        this.$notify({
-          message: "failed get data from server",
-          icon: "fa fa-times",
-          horizontalAlign: "center",
-          verticalAlign: "top",
-          type: "danger",
-        });
-        console.log(error);
-      }
-    },
-  },
+  //     try {
+  //       let res = await Faq.Delete(id);
+  //       if (res.data.success) {
+  //         this.success = true;
+  //         this.notifyVue();
+  //         this.loFaqtart();
+  //       } else {
+  //         this.failed = true;
+  //       }
+  //     } catch (err) {
+  //       this.isLoading = false;
+  //       console.log(err);
+  //     }
+  //   },
+  //   handleEdit(row) {
+  //     alert(`You want to edit row with id: ${row.item._id}`);
+  //   },
+  //   handleDelete(row) {
+  //     alert(`You want to delete row with id: ${row.item._id}`);
+  //   },
+  //   info(item, index, button) {
+  //     this.infoModal.title = `${item.question}`;
+  //     this.infoModal.content = item._id;
+  //     this.$root.$emit("bv::show::modal", this.infoModal.id, button);
+  //   },
+  //   resetInfoModal() {
+  //     this.infoModal.title = "";
+  //     this.infoModal.content = "";
+  //   },
+  //   onFiltered(filteredItems) {
+  //     // Trigger pagination to update the number of buttons/pages due to filtering
+  //     this.totalRows = filteredItems.length;
+  //     this.currentPage = 1;
+  //   },
+  //   async loFaqtart() {
+  //     try {
+  //       this.isLoading = true;
+  //       let res = await Faq.GetAll();
+  //       this.items = res.data.data;
+  //       this.totalRows = this.items.length;
+  //       this.isLoading = false;
+  //     } catch (error) {
+  //       this.$notify({
+  //         message: "failed get data from server",
+  //         icon: "fa fa-times",
+  //         horizontalAlign: "center",
+  //         verticalAlign: "top",
+  //         type: "danger",
+  //       });
+  //       console.log(error);
+  //     }
+  //   },
+  // },
   created() {
     this.loFaqtart();
   },

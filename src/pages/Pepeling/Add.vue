@@ -7,7 +7,9 @@
         <b-col cols="8" md="8" class="my-1">
           <card>
             <div>
-              <h1 class="text-center">Add new Pepeling Kahirupan</h1>
+              <h4 class="text-center font-weight-bold">
+                Tambah Pepeling Kahirupan
+              </h4>
               <b-alert :show="showError" variant="danger">{{
                 messageError
               }}</b-alert>
@@ -206,7 +208,21 @@ export default {
       let data = this.form;
       try {
         let res = await Pepeling.Add(data);
-        console.log(res);
+
+        if (res.data.status === 200) {
+          this.success = true;
+          this.$notify({
+            message: "success",
+            icon: "fa fa-check-circle",
+            horizontalAlign: "right",
+            verticalAlign: "top",
+            type: "success",
+          });
+          this.$router.push({
+            path: "/admin/pepeling",
+          });
+          this.isLoading = false;
+        }
         // if (res.data.success) {
         //   if (this.fileBanner && this.form.potition_type == "headline") {
         //     let form_file = new FormData();

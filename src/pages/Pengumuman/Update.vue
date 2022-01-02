@@ -7,7 +7,7 @@
         <b-col cols="8" md="8" class="my-1">
           <card>
             <div>
-              <h1 class="text-center">Update Article</h1>
+              <h4 class="text-center font-weight-bold">Edit Pengumuman</h4>
               <b-alert :show="showError" variant="danger">{{
                 messageError
               }}</b-alert>
@@ -79,7 +79,7 @@
                           variant="danger"
                           @click="
                             $router.push({
-                              path: '/admin/pepeling',
+                              path: '/admin/pengumuman',
                             })
                           "
                           >{{
@@ -218,7 +218,7 @@ export default {
             type: "success",
           });
           this.$router.push({
-            path: "/admin/pepeling",
+            path: "/admin/pengumuman",
           });
           this.isLoading = false;
         } else {
