@@ -2,16 +2,15 @@
   <div>
     <b-container fluid>
       <!-- User Interface controls -->
-
       <b-row class="mt-5 justify-content-center">
         <b-col cols="6" md="6" class="my-1">
           <card>
             <div>
-              <h1 class="text-center">Update User</h1>
+              <h1 class="text-center">Add User</h1>
               <b-alert :show="showError" variant="danger">{{
                 messageError
               }}</b-alert>
-              <b-form @submit="onSubmit">
+              <b-form @submit.prevent="onSubmit">
                 <b-form-group
                   id="input-group-1"
                   label=" email*:"
@@ -28,6 +27,18 @@
 
                 <b-form-group
                   id="input-group-1"
+                  label=" password*:"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="Event"
+                    v-model="form.password"
+                    type="password"
+                    required
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-1"
                   label="username:"
                   label-for="input-1"
                 >
@@ -38,60 +49,6 @@
                     required
                     placeholder="full name , ex: doni wihaya"
                   ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label=" phone:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.phone"
-                    type="text"
-                    required
-                    placeholder=" phone ex: 08512555121"
-                  ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label="full name:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.name"
-                    type="text"
-                    required
-                    placeholder="full name , ex: doni wihaya"
-                  ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label="fav game:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.game_fav"
-                    type="text"
-                    required
-                    placeholder="game fav : mobile legend"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                  id="input-group-1"
-                  label="subscription:"
-                  label-for="input-1"
-                >
-                  <b-form-checkbox
-                    v-model="form.subscription"
-                    switch
-                    size="lg"
-                    >{{
-                      form.subscription ? "Active" : "Unactive"
-                    }}</b-form-checkbox
-                  >
                 </b-form-group>
 
                 <b-form-group
@@ -105,19 +62,6 @@
                     size="l"
                     class="mt-2"
                   ></b-form-select>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label="image thumbnail:"
-                  label-for="input-1"
-                >
-                  <b-form-file
-                    @change="onFileChange"
-                    accept="image/*"
-                    v-model="file"
-                    placeholder="choose image"
-                    drop-placeholder="image only"
-                  ></b-form-file>
                 </b-form-group>
 
                 <div class="text-center" v-if="url">
@@ -161,14 +105,12 @@
 </template>
 
 <script>
-import Event from "@/api/EventApi";
 import VueUploadMultipleImage from "vue-upload-multiple-image";
 import User from "@/api/UserApi";
-import Category from "@/api/CategoryApi";
 
 export default {
   components: {
-    VueUploadMultipleImage
+    VueUploadMultipleImage,
   },
   data() {
     return {
@@ -179,13 +121,13 @@ export default {
         {
           name: "input criteria name ex: Gaji",
           point: 100,
-          type: null
-        }
+          type: null,
+        },
       ],
       options_data: [
         { value: null, text: "Please select type", disabled: true },
         { value: "up", text: "Upper is Better" },
-        { value: "down", text: "Lower is Better" }
+        { value: "down", text: "Lower is Better" },
       ],
       images: [],
       allImage: [],
@@ -195,7 +137,7 @@ export default {
         name: "",
         content: null,
         start_date: null,
-        end_time: null
+        end_time: null,
       },
       isLoading: false,
       options: [],
@@ -203,93 +145,26 @@ export default {
       messageError: "",
       showError: false,
       file: null,
-      url: null
+      url: null,
     };
   },
   methods: {
-    onFileChange(e) {
-      const file = e.target.files[0];
-      this.url = URL.createObjectURL(file);
-    },
-    async uploadImageSuccess(formData, index, fileList) {
-      let imgdata = new FormData();
-
-      if (fileList.length < 5) {
-        for (var pair of formData.entries()) {
-          imgdata.append(pair[0], pair[1]);
-          this.allImage.push(pair[1]);
-        }
-      }
-    },
-    RemoveCriteria(index) {
-      this.arr_criteria.splice(index, 1);
-    },
-    AddCriteria() {
-      this.arr_criteria.push({
-        name: "input criteria name ex: Gaji",
-        point: 0,
-        type: null
-      });
-    },
-    beforeRemove(index, done, fileList) {
-      console.log("index", index, fileList);
-
-      var r = confirm("remove image");
-      if (r == true) {
-        done();
-      } else {
-        console.log("x");
-      }
-      if (fileList.length === 0) {
-        this.allImage = null;
-      }
-    },
-    editImage(formData, index, fileList) {
-      for (var pair of formData.entries()) {
-        imgdata.append(pair[0], pair[1]);
-        this.allImage.push(pair[1]);
-      }
-    },
-    async onSubmit(evt) {
-      evt.preventDefault();
-
+    async onSubmit() {
       this.isLoading = true;
       let data = this.form;
       try {
         let res = await User.Update(this.$route.params.id, data);
         if (res.data.success) {
-          if (this.file) {
-            let form_file = new FormData();
-            form_file.append("file", this.file);
-            let save_image = await User.Upload(
-              this.$route.params.id,
-              form_file,
-              "update"
-            );
-            if (!save_image.data.success) {
-              this.false = true;
-              this.$notify({
-                message: "failed upload",
-                icon: "fa fa-times-circle",
-                horizontalAlign: "right",
-                verticalAlign: "top",
-                type: "danger"
-              });
-
-              this.isLoading = false;
-              return;
-            }
-          }
           this.success = true;
           this.$notify({
             message: "success",
             icon: "fa fa-check-circle",
             horizontalAlign: "right",
             verticalAlign: "top",
-            type: "success"
+            type: "success",
           });
           this.$router.push({
-            path: "/admin/user"
+            path: "/admin/user",
           });
           this.isLoading = false;
         } else {
@@ -301,21 +176,18 @@ export default {
             icon: "fa fa-times-circle",
             horizontalAlign: "right",
             verticalAlign: "top",
-            type: "danger"
+            type: "danger",
           });
         }
       } catch (err) {
         this.isLoading = false;
         console.log(err);
       }
-    }
+    },
   },
   async created() {
     try {
       let getdetail = await User.Detail(this.$route.params.id);
-      if (getdetail.data.data.image) {
-        this.url = getdetail.data.data.image;
-      }
       this.form = getdetail.data.data;
     } catch (error) {
       console.log(error);
@@ -324,12 +196,12 @@ export default {
         icon: "fa fa-times-circle",
         horizontalAlign: "right",
         verticalAlign: "top",
-        type: "danger"
+        type: "danger",
       });
     }
 
     // console.log(vendor_data[0]._id);
     // this.items = res.data.data;
-  }
+  },
 };
 </script>

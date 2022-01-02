@@ -38,131 +38,35 @@ const routes = [
         name: "setup",
         component: () => import("src/pages/Setup.vue")
       },
-
-      // {
-      //   path: 'tenant',
-      //   name: 'result',
-      //   component: () => import('src/pages/Tenant/Tenant.vue'),
-
-      // },
-      // {
-      //   path: 'tenant/add',
-      //   name: 'add_tenant',
-      //   component: () => import('src/pages/Tenant/Add.vue'),
-
-      // },
-      // {
-      //   path: 'tenant/update/:id',
-      //   name: 'update_tenant',
-      //   component: () => import('src/pages/Tenant/Update.vue'),
-
-      // },
-
       {
-        path: "Category",
-        name: "Category",
-        component: () => import("src/pages/Category/Category.vue")
+        path: "pengumuman",
+        name: "pengumuman",
+        component: () => import("src/pages/Pengumuman/Pengumuman.vue")
       },
       {
-        path: "Category/add",
-        name: "add_Category",
-        component: () => import("src/pages/Category/Add.vue")
+        path: "pengumuman/add",
+        name: "add_pengumuman",
+        component: () => import("src/pages/Pengumuman/Add.vue")
       },
       {
-        path: "Category/update/:id",
-        name: "update_Category",
-        component: () => import("src/pages/Category/Update.vue")
-      },
-
-      {
-        path: "Ads",
-        name: "Ads",
-        component: () => import("src/pages/Ads/Ads.vue")
+        path: "pengumuman/update/:id",
+        name: "update_pengumuman",
+        component: () => import("src/pages/Pengumuman/Update.vue")
       },
       {
-        path: "Ads/add",
-        name: "add_Ads",
-        component: () => import("src/pages/Ads/Add.vue")
+        path: "pepeling",
+        name: "pepeling",
+        component: () => import("src/pages/Pepeling/Pepeling.vue")
       },
       {
-        path: "Ads/update/:id",
-        name: "update_ads",
-        component: () => import("src/pages/Ads/Update.vue")
+        path: "pepeling/add",
+        name: "add_pepeling",
+        component: () => import("src/pages/Pepeling/Add.vue")
       },
       {
-        path: "faqcategory",
-        name: "faqcategory",
-        component: () => import("src/pages/FaqCategory/FaqCategory.vue")
-      },
-      {
-        path: "faqcategory/add",
-        name: "add_faqcategory",
-        component: () => import("src/pages/FaqCategory/Add.vue")
-      },
-      {
-        path: "faqcategory/update/:id",
-        name: "update_faqcategory",
-        component: () => import("src/pages/FaqCategory/Update.vue")
-      },
-      {
-        path: "Faq",
-        name: "Faq",
-        component: () => import("src/pages/Faq/Faq.vue")
-      },
-      {
-        path: "Faq/add",
-        name: "add_Faq",
-        component: () => import("src/pages/Faq/Add.vue")
-      },
-      {
-        path: "Faq/update/:id",
-        name: "update_Faq",
-        component: () => import("src/pages/Faq/Update.vue")
-      },
-      {
-        path: "Article",
-        name: "Article",
-        component: () => import("src/pages/Article/Article.vue")
-      },
-      {
-        path: "Article/add",
-        name: "add_Article",
-        component: () => import("src/pages/Article/Add.vue")
-      },
-      {
-        path: "Article/update/:id",
-        name: "update_Article",
-        component: () => import("src/pages/Article/Update.vue")
-      },
-      {
-        path: "Babes",
-        name: "NiagaBabes",
-        component: () => import("src/pages/NiagaBabes/NiagaBabes.vue")
-      },
-      {
-        path: "Babes/add",
-        name: "add_NiagaBabes",
-        component: () => import("src/pages/NiagaBabes/Add.vue")
-      },
-      {
-        path: "Babes/update/:id",
-        name: "update_NiagaBabes",
-        component: () => import("src/pages/NiagaBabes/Update.vue")
-      },
-      {
-        path: "articletag",
-        name: "articletag",
-        component: () => import("src/pages/ArticleTags/Tag.vue")
-      },
-      {
-        path: "articletag/add",
-        name: "add_articletag",
-        component: () => import("src/pages/ArticleTags/Add.vue")
-      },
-      {
-        path: "articletag/update/:id",
-        name: "update_articletag",
-        component: () => import("src/pages/ArticleTags/Update.vue")
+        path: "pepeling/update/:id",
+        name: "update_pepeling",
+        component: () => import("src/pages/Pepeling/Update.vue")
       },
 
       {
@@ -179,6 +83,21 @@ const routes = [
         path: "user/add",
         name: "User_add",
         component: () => import("src/pages/User/Add.vue")
+      },
+      {
+        path: "calon-siswa",
+        name: "calon-siswa",
+        component: () => import("src/pages/CalonSiswa/CalonSiswa.vue")
+      },
+      {
+        path: "calon-siswa/u/:id",
+        name: "calon-siswa_update",
+        component: () => import("src/pages/CalonSiswa/Update.vue")
+      },
+      {
+        path: "calon-siswa/add",
+        name: "calon-siswa_add",
+        component: () => import("src/pages/CalonSiswa/Add.vue")
       },
       {
         path: "table-list",

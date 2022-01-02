@@ -11,7 +11,7 @@
               <b-alert :show="showError" variant="danger">{{
                 messageError
               }}</b-alert>
-              <b-form @submit="onSubmit">
+              <b-form @submit.prevent="onSubmit">
                 <b-form-group
                   id="input-group-1"
                   label=" email*:"
@@ -51,60 +51,6 @@
                     placeholder="full name , ex: doni wihaya"
                   ></b-form-input>
                 </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label=" phone:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.phone"
-                    type="text"
-                    required
-                    placeholder=" phone ex: 08512555121"
-                  ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label="full name:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.name"
-                    type="text"
-                    required
-                    placeholder="full name , ex: doni wihaya"
-                  ></b-form-input>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label="fav game:"
-                  label-for="input-1"
-                >
-                  <b-form-input
-                    id="Event"
-                    v-model="form.game_fav"
-                    type="text"
-                    required
-                    placeholder="game fav : mobile legend"
-                  ></b-form-input>
-                </b-form-group>
-
-                <b-form-group
-                  id="input-group-1"
-                  label="subscription:"
-                  label-for="input-1"
-                >
-                  <b-form-checkbox
-                    v-model="form.subscription"
-                    switch
-                    size="lg"
-                    >{{
-                      form.subscription ? "Active" : "Unactive"
-                    }}</b-form-checkbox
-                  >
-                </b-form-group>
 
                 <b-form-group
                   id="input-group-1"
@@ -117,19 +63,6 @@
                     size="l"
                     class="mt-2"
                   ></b-form-select>
-                </b-form-group>
-                <b-form-group
-                  id="input-group-1"
-                  label="image thumbnail:"
-                  label-for="input-1"
-                >
-                  <b-form-file
-                    @change="onFileChange"
-                    accept="image/*"
-                    v-model="file"
-                    placeholder="choose image"
-                    drop-placeholder="image only"
-                  ></b-form-file>
                 </b-form-group>
 
                 <div class="text-center" v-if="url">
@@ -173,16 +106,13 @@
 </template>
 
 <script>
-import Event from "@/api/EventApi";
 import User from "@/api/UserApi";
 
 import VueUploadMultipleImage from "vue-upload-multiple-image";
-import Floor from "@/api/FloorApi";
-import Category from "@/api/CategoryApi";
 
 export default {
   components: {
-    VueUploadMultipleImage
+    VueUploadMultipleImage,
   },
   data() {
     return {
@@ -193,8 +123,8 @@ export default {
         {
           name: "input criteria name ex: Gaji",
           point: 100,
-          type: null
-        }
+          type: null,
+        },
       ],
       options_data: [],
       images: [],
@@ -203,17 +133,16 @@ export default {
       file: null,
       angka: 2,
       form: {
-        name: "",
-        content: null,
-        start_date: null,
-        end_time: null,
-        role: "user"
+        email: "",
+        username: "",
+        password: "",
+        role: "user",
       },
       isLoading: false,
       options: [],
       show: true,
       messageError: "",
-      showError: false
+      showError: false,
     };
   },
   methods: {
@@ -221,105 +150,43 @@ export default {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
     },
-    async uploadImageSuccess(formData, index, fileList) {
-      let imgdata = new FormData();
-
-      if (fileList.length < 5) {
-        for (var pair of formData.entries()) {
-          imgdata.append(pair[0], pair[1]);
-          this.allImage.push(pair[1]);
-        }
-      }
-    },
-    RemoveCriteria(index) {
-      this.arr_criteria.splice(index, 1);
-    },
-    AddCriteria() {
-      this.arr_criteria.push({
-        name: "input criteria name ex: Gaji",
-        point: 0,
-        type: null
-      });
-    },
-    beforeRemove(index, done, fileList) {
-      console.log("index", index, fileList);
-
-      var r = confirm("remove image");
-      if (r == true) {
-        done();
-      } else {
-        console.log("x");
-      }
-      if (fileList.length === 0) {
-        this.allImage = null;
-      }
-    },
-    editImage(formData, index, fileList) {
-      for (var pair of formData.entries()) {
-        imgdata.append(pair[0], pair[1]);
-        this.allImage.push(pair[1]);
-      }
-    },
-    async onSubmit(evt) {
-      evt.preventDefault();
-
+    async onSubmit() {
       this.isLoading = true;
       let data = this.form;
-      data["criteria"] = this.arr_criteria;
+      console.log(data);
       try {
         let res = await User.AddUser(data);
-        if (res.data.success) {
-          if (this.file) {
-            let form_file = new FormData();
-            form_file.append("file", this.file);
-            let save_image = await User.Upload(res.data.data._id, form_file);
-            if (!save_image.data.success) {
-              this.false = true;
-              this.$notify({
-                message: "failed upload",
-                icon: "fa fa-times-circle",
-                horizontalAlign: "right",
-                verticalAlign: "top",
-                type: "danger"
-              });
-
-              this.isLoading = false;
-              return;
-            }
-          }
+        console.log(res);
+        if (res.data.status === 200) {
           this.success = true;
           this.$notify({
             message: "success",
             icon: "fa fa-check-circle",
             horizontalAlign: "right",
             verticalAlign: "top",
-            type: "success"
+            type: "success",
           });
           this.$router.push({
-            path: "/admin/user"
+            path: "/admin/user",
           });
           this.isLoading = false;
         } else {
           this.isLoading = false;
           this.showError = true;
-          this.messageError = res.data.message;
+          this.messageError = res.data.data;
           this.$notify({
-            message: res.data.message,
+            message: res.data.data,
             icon: "fa fa-times-circle",
             horizontalAlign: "right",
             verticalAlign: "top",
-            type: "danger"
+            type: "danger",
           });
         }
       } catch (err) {
         this.isLoading = false;
         console.log(err);
       }
-    }
+    },
   },
-  async created() {
-    // console.log(vendor_data[0]._id);
-    // this.items = res.data.data;
-  }
 };
 </script>

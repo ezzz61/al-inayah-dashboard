@@ -2,21 +2,13 @@ import axios from "axios";
 
 export default () => {
   let instance = axios.create({
-    //DEVOPS
-    // baseURL: `https://queueserver.azurewebsites.net`
-
-    //PRODUCTION
-    // baseURL: `https://eunoiaqueue.azurewebsites.net`
-
     //LOCAL
     headers: {
       Authorization: localStorage.getItem("token")
         ? localStorage.getItem("token")
         : null
     },
-    // baseURL: `http://localhost:8822/`
-
-    baseURL: `https://api.niagaplay.com/`
+    baseURL: `http://localhost:8080/api`
   });
   instance.interceptors.response.use(
     function(response) {

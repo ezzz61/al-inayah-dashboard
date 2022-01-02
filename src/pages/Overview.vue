@@ -1,50 +1,51 @@
 <template>
   <div class="content">
     <div class="container-fluid">
+      <!-- widget -->
       <div class="row">
+        <!-- Pepeling -->
         <div class="col-xl-3 col-md-6">
           <stats-card>
             <div slot="header" class="icon-warning">
               <i class="nc-icon nc-bullet-list-67 text-primary"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Article total</p>
-              <h4 class="card-title">{{ data.total_article }}</h4>
+              <p class="card-category">Pepeling Kahirupan</p>
+              <h4 class="card-title">{{ data.pepeling.total }}</h4>
             </div>
             <div slot="footer"><i class="fa fa-calendar-o"></i>until now</div>
           </stats-card>
         </div>
 
+        <!-- Pengumuman -->
+        <div class="col-xl-3 col-md-6">
+          <stats-card>
+            <div slot="header" class="icon-warning">
+              <i class="nc-icon nc-bullet-list-67 text-primary"></i>
+            </div>
+            <div slot="content">
+              <p class="card-category">Pengumuman</p>
+              <h4 class="card-title">{{ data.pengumuman.total }}</h4>
+            </div>
+            <div slot="footer"><i class="fa fa-calendar-o"></i>until now</div>
+          </stats-card>
+        </div>
+
+        <!-- calon Siswa -->
         <div class="col-xl-3 col-md-6">
           <stats-card>
             <div slot="header" class="icon-success">
-              <i
-                class="nc-icon nc-grid-45
-
- text-success"
-              ></i>
+              <i class="nc-icon nc-grid-45 text-success"></i>
             </div>
             <div slot="content">
-              <p class="card-category">total forum topic</p>
-              <h4 class="card-title">{{ data.total_forum }}</h4>
+              <p class="card-category">Calon Siswa</p>
+              <h4 class="card-title">{{ data.calonSiswa.total }}</h4>
             </div>
             <div slot="footer"><i class="fa fa-calendar-o"></i>until now</div>
           </stats-card>
         </div>
 
-        <div class="col-xl-3 col-md-6">
-          <stats-card>
-            <div slot="header" class="icon-danger">
-              <i class="nc-icon nc-chat-round text-warning"></i>
-            </div>
-            <div slot="content">
-              <p class="card-category">Total reply forum</p>
-              <h4 class="card-title">{{ data.total_reply }}</h4>
-            </div>
-            <div slot="footer"><i class="fa fa-calendar-o"></i>Until now</div>
-          </stats-card>
-        </div>
-
+        <!-- User -->
         <div class="col-xl-3 col-md-6">
           <stats-card>
             <div slot="header" class="icon-info">
@@ -52,40 +53,79 @@
             </div>
             <div slot="content">
               <p class="card-category">User total</p>
-              <h4 class="card-title">{{ data.total_user }}</h4>
+              <h4 class="card-title">{{ data.user.total }}</h4>
             </div>
             <div slot="footer"><i class="fa fa-calendar-o"></i>until now</div>
           </stats-card>
         </div>
       </div>
+
+      <!-- calon siswa -->
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
           <card>
             <template slot="header">
-              <h4 class="card-title">New Event</h4>
-              <p class="card-category">5 newest event</p>
-
-              <!-- <p class="card-category">24 Hours performance</p> -->
+              <h4 class="card-title">Calon Siswa Terbaru</h4>
             </template>
             <l-table
-              :data="data.last_article"
-              :columns="['created date', 'event name']"
+              :data="data.calonSiswa.data"
+              :columns="[
+                'NISN',
+                'Nama',
+                'Asal Sekolah',
+                'Email',
+                'Mendaftar Pada',
+              ]"
             >
               <template slot-scope="{ row }">
-                <td class="text-muted">
-                  {{
-                    new Date(row.created_at).getDate().toString() +
-                      " " +
-                      month_name[new Date(row.created_at).getMonth()] +
-                      " " +
-                      new Date(row.created_at)
-                        .getFullYear()
-                        .toString()
-                        .substr(-2)
-                  }}
+                <td>
+                  {{ row.no_nisn }}
                 </td>
                 <td>
+                  {{ row.nama }}
+                </td>
+                <td>
+                  {{ row.nama_sekolah_asal }}
+                </td>
+                <td>
+                  {{ row.email }}
+                </td>
+                <td class="text-muted">
+                  {{
+                    new Date(row.createdAt).getDate().toString() +
+                    " " +
+                    month_name[new Date(row.createdAt).getMonth()] +
+                    " " +
+                    new Date(row.createdAt).getFullYear().toString().substr(-2)
+                  }}
+                </td>
+              </template>
+            </l-table>
+          </card>
+        </div>
+      </div>
+
+      <!-- pepeling pengumuman user -->
+      <div class="row">
+        <div class="col-md-4">
+          <card>
+            <template slot="header">
+              <h4 class="card-title">Pepeling Terbaru</h4>
+            </template>
+            <l-table :data="data.pepeling.data" :columns="['Judul', 'Tanggal']">
+              <!-- <template slot="columns"></template> -->
+              <template slot-scope="{ row }">
+                <td>
                   {{ row.title }}
+                </td>
+                <td>
+                  {{
+                    new Date(row.createdAt).getDate().toString() +
+                    " " +
+                    month_name[new Date(row.createdAt).getMonth()] +
+                    " " +
+                    new Date(row.createdAt).getFullYear().toString().substr(-2)
+                  }}
                 </td>
               </template>
             </l-table>
@@ -95,27 +135,12 @@
         <div class="col-md-4">
           <card>
             <template slot="header">
-              <h4 class="card-title">user Lastest registered</h4>
+              <h4 class="card-title">Pengumuman Terbaru</h4>
             </template>
-            <l-table :data="data.last_user" :columns="['name']">
-              <template slot="columns"></template>
-              <template slot-scope="{ row }">
-                <td>
-                  {{ row.email }}
-                </td>
-              </template>
-            </l-table>
-          </card>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-6">
-          <card>
-            <template slot="header">
-              <h4 class="card-title">Last forum added</h4>
-            </template>
-            <l-table :data="data.new_forum" :columns="['title', 'date']">
+            <l-table
+              :data="data.pengumuman.data"
+              :columns="['Judul', 'Tanggal']"
+            >
               <!-- <template slot="columns"></template> -->
               <template slot-scope="{ row }">
                 <td>
@@ -123,14 +148,11 @@
                 </td>
                 <td>
                   {{
-                    new Date(row.created_at).getDate().toString() +
-                      " " +
-                      month_name[new Date(row.created_at).getMonth()] +
-                      " " +
-                      new Date(row.created_at)
-                        .getFullYear()
-                        .toString()
-                        .substr(-2)
+                    new Date(row.createdAt).getDate().toString() +
+                    " " +
+                    month_name[new Date(row.createdAt).getMonth()] +
+                    " " +
+                    new Date(row.createdAt).getFullYear().toString().substr(-2)
                   }}
                 </td>
               </template>
@@ -138,35 +160,16 @@
           </card>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
           <card>
             <template slot="header">
-              <h4 class="card-title">Last post forum</h4>
+              <h4 class="card-title">User Terbaru</h4>
             </template>
-            <l-table
-              :data="data.new_reply"
-              :columns="['reply by', 'forum', 'date']"
-            >
-              <!-- <template slot="columns"></template> -->
-
+            <l-table :data="data.user.data" :columns="['Email']">
+              <template slot="columns"></template>
               <template slot-scope="{ row }">
-                <td class="text-muted">
-                  {{ row.created_by ? row.created_by.email : "deleted user" }}
-                </td>
                 <td>
-                  {{ row.topic_id.title }}
-                </td>
-                <td>
-                  {{
-                    new Date(row.created_at).getDate().toString() +
-                      " " +
-                      month_name[new Date(row.created_at).getMonth()] +
-                      " " +
-                      new Date(row.created_at)
-                        .getFullYear()
-                        .toString()
-                        .substr(-2)
-                  }}
+                  {{ row.email }}
                 </td>
               </template>
             </l-table>
@@ -186,7 +189,7 @@ export default {
   components: {
     LTable,
     ChartCard,
-    StatsCard
+    StatsCard,
   },
   data() {
     return {
@@ -202,50 +205,57 @@ export default {
         "sept",
         "okt",
         "nov",
-        "des"
+        "des",
       ],
       editTooltip: "Edit Task",
       deleteTooltip: "Remove",
       data: {
-        total_event_finish: 0,
-        total_event_ongoing: 0,
-        total_candidate: 0,
-        total_user: 0
+        user: { data: [], total: "" },
+        pepeling: { data: [], total: "" },
+        calonSiswa: { data: [], total: "" },
+        pengumuman: { data: [], total: "" },
       },
-
       isLoading: false,
       tableData: {
         data: [
           {
             title:
               'Sign contract for "What are conference organizers afraid of?"',
-            checked: false
+            checked: false,
           },
           {
             title:
               "Lines From Great Russian Literature? Or E-mails From My Boss?",
-            checked: true
+            checked: true,
           },
           {
             title:
               "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
-            checked: true
+            checked: true,
           },
           {
             title: "Create 4 Invisible User Experiences you Never Knew About",
-            checked: false
+            checked: false,
           },
           { title: 'Read "Following makes Medium better"', checked: false },
-          { title: "Unfollow 5 enemies from twitter", checked: false }
-        ]
-      }
+          { title: "Unfollow 5 enemies from twitter", checked: false },
+        ],
+      },
     };
   },
   async created() {
     try {
       this.isLoading = true;
       let res = await Dashboard.Get();
-      this.data = res.data.data;
+
+      if (res.data.data.status === 200) {
+        const { user, pepeling, calonSiswa, pengumuman } = res.data.data.data;
+        this.data.user = user;
+        this.data.pepeling = pepeling;
+        this.data.calonSiswa = calonSiswa;
+        this.data.pengumuman = pengumuman;
+        console.log(this.data);
+      }
       this.isLoading = false;
     } catch (error) {
       console.log(error);
@@ -254,10 +264,10 @@ export default {
         icon: "fa  fa-exclamation-circle",
         horizontalAlign: "right",
         verticalAlign: "top",
-        type: "danger"
+        type: "danger",
       });
     }
-  }
+  },
 };
 </script>
 <style></style>

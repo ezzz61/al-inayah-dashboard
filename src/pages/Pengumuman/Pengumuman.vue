@@ -2,7 +2,6 @@
   <b-container fluid>
     <!-- User Interface controls -->
     <notifications> </notifications>
-
     <b-row class="mt-5">
       <b-col lg="6" class="my-1">
         <b-form-group
@@ -41,9 +40,9 @@
           <div class="col-6">
             <button
               class="btn btn-icon btn-primary btn-fill"
-              @click="$router.push({ path: 'ads/add' })"
+              @click="$router.push({ path: '/admin/pengumuman/add' })"
             >
-              <i class="nc-icon nc-simple-add"> New Ads</i>
+              Tambah Pengumuman
             </button>
           </div>
         </div>
@@ -74,22 +73,6 @@
           </b-input-group>
         </b-form-group>
       </b-col>
-
-      <b-col lg="6" class="my-1">
-        <b-form-group
-          label="Filter On"
-          label-cols-sm="3"
-          label-align-sm="right"
-          label-size="sm"
-          description="Leave all unchecked to filter on all data"
-          class="mb-0"
-        >
-          <b-form-checkbox-group v-model="filterOn" class="mt-1">
-            <b-form-checkbox value="name">Ads Name</b-form-checkbox>
-            <b-form-checkbox value="status">Status</b-form-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
-      </b-col>
     </b-row>
 
     <!-- Main table element -->
@@ -116,18 +99,12 @@
             :sort-direction="sortDirection"
             @filtered="onFiltered"
           >
-            <!-- <template v-slot:cell(Ads)="row">
-              {{ row.item.Ads_id[0].name }}
-            </template> -->
-            <!-- <template v-slot:cell(floor)="row">
-              {{ row.item.floor_id[0].name }}
-            </template> -->
             <template #cell(actions)="row">
               <button
                 class="btn btn-icon btn-info mx-1"
                 @click="
                   $router.push({
-                    name: 'update_ads',
+                    name: 'update_pengumuman',
                     params: { id: row.item._id },
                   })
                 "
@@ -185,7 +162,7 @@
       @hide="resetInfoModal"
     >
       <pre>
-are you sure want to delete <strong>{{ infoModal.title }} </strong>from Ads list ?</pre>
+are you sure want to delete <strong>{{ infoModal.title }} </strong>from Pengumuman list ?</pre>
     </b-modal>
   </b-container>
 </template>
@@ -193,8 +170,7 @@ are you sure want to delete <strong>{{ infoModal.title }} </strong>from Ads list
 <script>
 import Card from "src/components/Cards/Card.vue";
 import LoadingTable from "src/components/LoadingTable.vue";
-
-import Ads from "@/api/AdsApi";
+import pengumumanApi from "@/api/PengumumanApi";
 
 export default {
   components: {
@@ -225,17 +201,10 @@ export default {
       notifications: {
         topCenter: false,
       },
-
       fields: [
         {
           key: "title",
-          label: "Ads name",
-          sortable: true,
-          sortDirection: "desc",
-        },
-         {
-          key: "type",
-          label: "ads potition",
+          label: "Papeling Kahirupan Title",
           sortable: true,
           sortDirection: "desc",
         },
@@ -244,12 +213,16 @@ export default {
           label: "status",
           sortable: true,
           sortDirection: "desc",
-            formatter: (value, key, item) => {
-            return item.is_active == true ? 'Active' : 'Unactive'
+          formatter: (value, key, item) => {
+            return item.is_active == true ? "Active" : "Unactive";
           },
         },
-
-     
+        {
+          key: "created_by.username",
+          label: "Created by",
+          sortable: true,
+          sortDirection: "desc",
+        },
 
         { key: "actions", label: "Actions" },
       ],
@@ -271,7 +244,6 @@ export default {
   },
   computed: {
     sortOptions() {
-      // Create an options list from our fields
       return this.fields
         .filter((f) => f.sortable)
         .map((f) => {
@@ -280,7 +252,6 @@ export default {
     },
   },
   mounted() {
-    // Set the initial number of items
     this.totalRows = this.items.length;
   },
   methods: {
@@ -301,11 +272,11 @@ export default {
       this.failed = false;
 
       try {
-        let res = await Ads.Delete(id);
-        if (res.data.success) {
+        let res = await pengumumanApi.Delete(id);
+        if (res.data.status === 200) {
           this.success = true;
           this.notifyVue();
-          this.loadStart();
+          this.getPengumuman();
         } else {
           this.failed = true;
         }
@@ -330,16 +301,14 @@ export default {
       this.infoModal.content = "";
     },
     onFiltered(filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    async loadStart() {
+    async getPengumuman() {
       try {
         this.isLoading = true;
-        let res = await Ads.Get();
-        this.items = res.data.data;
-
+        let res = await pengumumanApi.Get();
+        this.items = res.data.data.data;
         this.totalRows = this.items.length;
         this.isLoading = false;
       } catch (error) {
@@ -355,7 +324,7 @@ export default {
     },
   },
   created() {
-    this.loadStart();
+    this.getPengumuman();
   },
 };
 </script>

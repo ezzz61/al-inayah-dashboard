@@ -7,11 +7,11 @@
   >
     <div class="sidebar-wrapper">
       <div class="logo">
-        <a href="#" class="simple-text logo__container">
+        <a href="/admin" class="simple-text logo__container">
           <div class="logo-img">
             <img src="img/vue-logo.png" alt="" />
           </div>
-          Niagaplay Admin
+          AL-INAYAH
         </a>
       </div>
 
@@ -42,17 +42,17 @@ import SidebarLink from "./SidebarLink.vue";
 
 export default {
   components: {
-    SidebarLink
+    SidebarLink,
   },
   props: {
     title: {
       type: String,
-      default: "SPK ADMIN"
+      default: "SPK ADMIN",
     },
     backgroundColor: {
       type: String,
       default: "black",
-      validator: value => {
+      validator: (value) => {
         let acceptedValues = [
           "",
           "blue",
@@ -61,50 +61,50 @@ export default {
           "orange",
           "red",
           "purple",
-          "black"
+          "black",
         ];
         return acceptedValues.indexOf(value) !== -1;
-      }
+      },
     },
     backgroundImage: {
       type: String,
-      default: "img/sidebar-5.jpg"
+      default: "img/sidebar-5.jpg",
     },
     activeColor: {
       type: String,
       default: "success",
-      validator: value => {
+      validator: (value) => {
         let acceptedValues = [
           "primary",
           "info",
           "success",
           "warning",
-          "danger"
+          "danger",
         ];
         return acceptedValues.indexOf(value) !== -1;
-      }
+      },
     },
     sidebarLinks: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     autoClose: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   provide() {
     return {
-      autoClose: this.autoClose
+      autoClose: this.autoClose,
     };
   },
   computed: {
     sidebarStyle() {
       return {
-        backgroundImage: `url(${this.backgroundImage})`
+        backgroundImage: `url(${this.backgroundImage})`,
       };
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

@@ -5,7 +5,7 @@
         <b-col md="4" class="text-center">
           <b-card-group deck>
             <b-card
-              header="Niagaplay ADMIN SITE"
+              header="AL-INAYAH ADMIN"
               header-tag="header"
               footer="Welcome"
               footer-tag="footer"
@@ -19,7 +19,7 @@
               >
                 {{ error[0] }}
               </b-alert>
-              <b-form @submit="onSubmit">
+              <b-form @submit.prevent="onSubmit">
                 <b-form-group id="input-group-1" label-for="input-1">
                   <b-form-input
                     id="input-1"
@@ -69,44 +69,46 @@ export default {
     return {
       form: {
         email: "",
-        password: ""
+        username: "",
+        password: "",
       },
       isLoading: false,
       error: [],
-      show: true
+      show: true,
     };
   },
   methods: {
-    async onSubmit(evt) {
-      evt.preventDefault();
+    async onSubmit() {
       this.error = [];
       this.isLoading = true;
       try {
         let res = await Login.Login({
           email: this.form.email,
-          password: this.form.password
+          password: this.form.password,
         });
-        if (res.data.token) {
+
+        if (res.data.data.token) {
           try {
             var expired = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-            let data_user = await this.$jwtDec.decode(res.data.token);
-            if (data_user.role_id != "admin") {
+            let data_user = await this.$jwtDec.decode(res.data.data.token);
+            if (data_user.role != "admin") {
               return this.error.push("Unautorize");
             }
-            this.$cookie.set("token", res.data.token, {
-              expires: expired
+
+            this.$cookie.set("token", res.data.data.token, {
+              expires: expired,
             });
             this.$cookie.set("data_user", JSON.stringify(data_user), {
-              expires: expired
+              expires: expired,
             });
-            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("token", res.data.data.token);
             localStorage.setItem("data_user", JSON.stringify(data_user));
             this.$notify({
               message: "success login",
               icon: "fa fa-check-circle",
               horizontalAlign: "center",
               verticalAlign: "top",
-              type: "success"
+              type: "success",
             });
             this.$router.push({ path: "/admin" });
           } catch (err) {
@@ -121,7 +123,7 @@ export default {
         this.isLoading = false;
         this.error.push("something went wrong");
       }
-    }
+    },
   },
   created() {
     let token = localStorage.getItem("token");
@@ -130,6 +132,6 @@ export default {
     if (token !== null && data !== null) {
       this.$router.push({ path: "/" });
     }
-  }
+  },
 };
 </script>

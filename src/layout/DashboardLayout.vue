@@ -7,56 +7,31 @@
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Dashboard</p>
       </sidebar-link>
-      <sidebar-link to="/admin/category">
-        <i class="nc-icon nc-square-pin"></i>
-        <p>Category</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/articletag">
-        <i
-          class="nc-icon nc-tag-content
 
-"
-        ></i>
-        <p>Article Tag</p>
+      <sidebar-link to="/admin/pepeling">
+        <i class="nc-icon nc-caps-small"></i>
+        <p>Pepeling Kahirupan</p>
       </sidebar-link>
-      <sidebar-link to="/admin/article">
-        <i
-          class="nc-icon       nc-bullet-list-67
 
-"
-        ></i>
-        <p>Article</p>
+      <sidebar-link to="/admin/pengumuman">
+        <i class="nc-icon nc-single-copy-04"></i>
+        <p>Pengumuman</p>
+      </sidebar-link>
+
+      <sidebar-link to="/admin/calon-siswa">
+        <i class="nc-icon nc-single-02"></i>
+        <p>Calon Siswa</p>
       </sidebar-link>
 
       <sidebar-link to="/admin/user">
         <i class="nc-icon nc-single-02"></i>
         <p>User</p>
       </sidebar-link>
-      <sidebar-link to="/admin/ads">
-        <i class="nc-icon nc-tag-content"></i>
-        <p>Ads</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/babes">
-        <i class="nc-icon nc-satisfied"></i>
-        <p>Babes</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/faqcategory">
-        <i class="nc-icon nc-notes"></i>
-        <p>Faq Category</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/faq">
-        <i class="nc-icon nc-bulb-63"></i>
-        <p>Faq</p>
-      </sidebar-link>
+
       <sidebar-link to="/admin/setup">
-        <i class="nc-icon nc-settings-tool-66"></i>
+        <i class="nc-icon nc-settings-gear-64"></i>
         <p>Setup</p>
       </sidebar-link>
-
-      <!-- <sidebar-link to="/admin/notifications">
-        <i class="nc-icon nc-bell-55"></i>
-        <p>Notifications</p>
-      </sidebar-link> -->
     </side-bar>
     <div class="main-panel">
       <top-navbar :name="name"></top-navbar>
@@ -78,7 +53,7 @@ export default {
     return {
       name: "",
       role: "",
-      data: null
+      data: null,
     };
   },
   created() {
@@ -112,14 +87,14 @@ export default {
     TopNavbar,
     ContentFooter,
     DashboardContent,
-    MobileMenu
+    MobileMenu,
   },
   methods: {
     toggleSidebar() {
       if (this.$sidebar.showSidebar) {
         this.$sidebar.displaySidebar(false);
       }
-    }
-  }
+    },
+  },
 };
 </script>

@@ -11,7 +11,7 @@ export default {
     return Api().get("/user");
   },
   Detail(data) {
-    return Api().get("/user/" + data);
+    return Api().get("/user/details/" + data);
   },
   CandidateDetail(data) {
     return Api().get("/candidate/" + data);
@@ -29,7 +29,7 @@ export default {
     return Api().put("/candidate/" + id, data);
   },
   AddUser(data) {
-    return Api().post("/user", data);
+    return Api().post("/user/add", data);
   },
   Delete(id) {
     return Api().delete("/user/" + id);

@@ -8,7 +8,7 @@
           </li>
         </ul>
       </nav>
-      <div class="copyright text-center">Niagaplay</div>
+      <div class="copyright text-center">AL-INAYAH</div>
     </div>
   </footer>
 </template>

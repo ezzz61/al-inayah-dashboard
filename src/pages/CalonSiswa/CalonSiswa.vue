@@ -1,8 +1,6 @@
 <template>
   <b-container fluid>
-    <!-- User Interface controls -->
     <notifications> </notifications>
-
     <b-row class="mt-5">
       <b-col lg="6" class="my-1">
         <b-form-group
@@ -41,9 +39,9 @@
           <div class="col-6">
             <button
               class="btn btn-icon btn-primary btn-fill"
-              @click="$router.push({ name: 'User_add' })"
+              @click="$router.push({ path: '/admin/calon-siswa/add' })"
             >
-              Tambah User
+              Tambah Calon Siswa
             </button>
           </div>
         </div>
@@ -89,7 +87,7 @@
             show-empty
             class="ml-2"
             stacked="md"
-            :items="items"
+            :items="calonSiswaData"
             :fields="fields"
             :current-page="currentPage"
             :per-page="perPage"
@@ -100,18 +98,12 @@
             :sort-direction="sortDirection"
             @filtered="onFiltered"
           >
-            <!-- <template v-slot:cell(category)="row">
-              {{ row.item.category_id[0].name }}
-            </template> -->
-            <!-- <template v-slot:cell(floor)="row">
-              {{ row.item.floor_id[0].name }}
-            </template> -->
             <template #cell(actions)="row">
               <button
                 class="btn btn-icon btn-info mx-1"
                 @click="
                   $router.push({
-                    name: 'User_update',
+                    name: 'calon-siswa_update',
                     params: { id: row.item._id },
                   })
                 "
@@ -165,11 +157,11 @@
     <b-modal
       @ok="handleOk(infoModal.content)"
       :id="infoModal.id"
-      :title="'Delete ' + infoModal.name"
+      :title="'Delete ' + infoModal.title"
       @hide="resetInfoModal"
     >
       <pre>
-are you sure want to delete <strong>{{ infoModal.title }} </strong>from User list ?</pre>
+  are you sure want to delete <strong>{{ infoModal.title }} </strong>from Calon Siswa list ?</pre>
     </b-modal>
   </b-container>
 </template>
@@ -177,8 +169,7 @@ are you sure want to delete <strong>{{ infoModal.title }} </strong>from User lis
 <script>
 import Card from "src/components/Cards/Card.vue";
 import LoadingTable from "src/components/LoadingTable.vue";
-
-import User from "@/api/UserApi";
+import calonSiswaApi from "@/api/CalonSiswaApi";
 
 export default {
   components: {
@@ -188,7 +179,7 @@ export default {
   data() {
     return {
       success: false,
-      items: [],
+      calonSiswaData: [],
       month_name: [
         "januari",
         "februari",
@@ -209,35 +200,74 @@ export default {
       notifications: {
         topCenter: false,
       },
-
       fields: [
         {
-          key: "username",
-          label: "username",
+          key: "no_nisn",
+          label: "NISN",
+          sortable: true,
+          sortDirection: "desc",
+        },
+        {
+          key: "nama",
+          label: "Nama Lengkap",
+          sortable: true,
+          sortDirection: "desc",
+        },
+        {
+          key: "jenis_kelamin",
+          label: "Jenis Kelamin",
+          sortable: true,
+          sortDirection: "desc",
+        },
+        {
+          key: "nama_sekolah_asal",
+          label: "Nama Sekolah Asal",
           sortable: true,
           sortDirection: "desc",
         },
         {
           key: "email",
-          label: "email",
+          label: "Email",
           sortable: true,
           sortDirection: "desc",
         },
-
         {
-          key: "role",
-          label: "role",
+          key: "nilai_rata_rata",
+          label: "Nilai Rata Rata",
           sortable: true,
           sortDirection: "desc",
         },
         {
           key: "createdAt",
-          label: "Bergabung Pada",
+          label: "Mendaftar pada",
           sortable: true,
           sortDirection: "desc",
         },
+        // {
+        //   key: "is_active",
+        //   label: "status",
+        //   sortable: true,
+        //   sortDirection: "desc",
+        //   formatter: (value, key, item) => {
+        //     return item.is_active == true ? "Active" : "Unactive";
+        //   },
+        // },
 
         { key: "actions", label: "Actions" },
+      ],
+      month_name: [
+        "jan",
+        "feb",
+        "mar",
+        "apr",
+        "mei",
+        "jun",
+        "jul",
+        "aug",
+        "sept",
+        "okt",
+        "nov",
+        "des",
       ],
       totalRows: 1,
       currentPage: 1,
@@ -257,7 +287,6 @@ export default {
   },
   computed: {
     sortOptions() {
-      // Create an options list from our fields
       return this.fields
         .filter((f) => f.sortable)
         .map((f) => {
@@ -266,7 +295,6 @@ export default {
     },
   },
   mounted() {
-    // Set the initial number of items
     this.totalRows = this.items.length;
   },
   methods: {
@@ -287,11 +315,11 @@ export default {
       this.failed = false;
 
       try {
-        let res = await User.Delete(id);
+        let res = await calonSiswaApi.Delete(id);
         if (res.data.status === 200) {
           this.success = true;
           this.notifyVue();
-          this.loadStart();
+          this.getPepeling();
         } else {
           this.failed = true;
         }
@@ -307,7 +335,7 @@ export default {
       alert(`You want to delete row with id: ${row.item._id}`);
     },
     info(item, index, button) {
-      this.infoModal.title = `${item.email}`;
+      this.infoModal.title = `${item.nama}`;
       this.infoModal.content = item._id;
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
@@ -316,31 +344,31 @@ export default {
       this.infoModal.content = "";
     },
     onFiltered(filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    async loadStart() {
+    async getCalonSiswa() {
       try {
         this.isLoading = true;
-        let res = await User.Get();
-        const users = res.data.data.data;
-        let filtredUser = [];
-        // filter created
-        users.map((user) => {
-          filtredUser.push({
-            ...user,
+        let res = await calonSiswaApi.Get();
+        const calonSiswa = res.data.data.data;
+        let filtredCalonSiswa = [];
+
+        // change date type
+        calonSiswa.map((siswa) => {
+          filtredCalonSiswa.push({
+            ...siswa,
             createdAt:
-              new Date(user.createdAt).getDate().toString() +
+              new Date(siswa.createdAt).getDate().toString() +
               " " +
-              this.month_name[new Date(user.createdAt).getMonth()] +
+              this.month_name[new Date(siswa.createdAt).getMonth()] +
               " " +
-              new Date(user.createdAt).getFullYear().toString().substr(-2),
+              new Date(siswa.createdAt).getFullYear().toString().substr(-2),
           });
         });
-        console.log(filtredUser);
-        this.items = filtredUser;
-        this.totalRows = this.items.length;
+
+        this.calonSiswaData = filtredCalonSiswa;
+        this.totalRows = this.calonSiswaData.length;
         this.isLoading = false;
       } catch (error) {
         this.$notify({
@@ -355,7 +383,7 @@ export default {
     },
   },
   created() {
-    this.loadStart();
+    this.getCalonSiswa();
   },
 };
 </script>

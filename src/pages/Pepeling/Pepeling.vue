@@ -2,7 +2,6 @@
   <b-container fluid>
     <!-- User Interface controls -->
     <notifications> </notifications>
-
     <b-row class="mt-5">
       <b-col lg="6" class="my-1">
         <b-form-group
@@ -41,9 +40,9 @@
           <div class="col-6">
             <button
               class="btn btn-icon btn-primary btn-fill"
-              @click="$router.push({ path: 'articletag/add' })"
+              @click="$router.push({ path: '/admin/pepeling/add' })"
             >
-              <i class="nc-icon nc-simple-add"> New Article Tag</i>
+              Tambah Pepeling Kahirupan
             </button>
           </div>
         </div>
@@ -74,22 +73,6 @@
           </b-input-group>
         </b-form-group>
       </b-col>
-
-      <b-col lg="6" class="my-1">
-        <b-form-group
-          label="Filter On"
-          label-cols-sm="3"
-          label-align-sm="right"
-          label-size="sm"
-          description="Leave all unchecked to filter on all data"
-          class="mb-0"
-        >
-          <b-form-checkbox-group v-model="filterOn" class="mt-1">
-            <b-form-checkbox value="name">Category Name</b-form-checkbox>
-            <b-form-checkbox value="status">Status</b-form-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
-      </b-col>
     </b-row>
 
     <!-- Main table element -->
@@ -116,18 +99,12 @@
             :sort-direction="sortDirection"
             @filtered="onFiltered"
           >
-            <!-- <template v-slot:cell(category)="row">
-              {{ row.item.category_id[0].name }}
-            </template> -->
-            <!-- <template v-slot:cell(floor)="row">
-              {{ row.item.floor_id[0].name }}
-            </template> -->
             <template #cell(actions)="row">
               <button
                 class="btn btn-icon btn-info mx-1"
                 @click="
                   $router.push({
-                    name: 'update_articletag',
+                    name: 'update_pepeling',
                     params: { id: row.item._id },
                   })
                 "
@@ -185,7 +162,7 @@
       @hide="resetInfoModal"
     >
       <pre>
-are you sure want to delete <strong>{{ infoModal.title }} </strong>from Tag list ?</pre>
+are you sure want to delete <strong>{{ infoModal.title }} </strong>from Article list ?</pre>
     </b-modal>
   </b-container>
 </template>
@@ -193,8 +170,7 @@ are you sure want to delete <strong>{{ infoModal.title }} </strong>from Tag list
 <script>
 import Card from "src/components/Cards/Card.vue";
 import LoadingTable from "src/components/LoadingTable.vue";
-
-import Category from "@/api/CategoryApi";
+import pepelingApi from "@/api/PepelingApi";
 
 export default {
   components: {
@@ -225,11 +201,10 @@ export default {
       notifications: {
         topCenter: false,
       },
-
       fields: [
         {
-          key: "name",
-          label: "Category name",
+          key: "title",
+          label: "Papeling Kahirupan Title",
           sortable: true,
           sortDirection: "desc",
         },
@@ -238,12 +213,22 @@ export default {
           label: "status",
           sortable: true,
           sortDirection: "desc",
-            formatter: (value, key, item) => {
-            return item.is_active == true ? 'Active' : 'Unactive'
+          formatter: (value, key, item) => {
+            return item.is_active == true ? "Active" : "Unactive";
           },
         },
-
-     
+        {
+          key: "writter",
+          label: "Writer",
+          sortable: true,
+          sortDirection: "desc",
+        },
+        {
+          key: "created_by.username",
+          label: "Created by",
+          sortable: true,
+          sortDirection: "desc",
+        },
 
         { key: "actions", label: "Actions" },
       ],
@@ -265,7 +250,6 @@ export default {
   },
   computed: {
     sortOptions() {
-      // Create an options list from our fields
       return this.fields
         .filter((f) => f.sortable)
         .map((f) => {
@@ -274,7 +258,6 @@ export default {
     },
   },
   mounted() {
-    // Set the initial number of items
     this.totalRows = this.items.length;
   },
   methods: {
@@ -295,11 +278,11 @@ export default {
       this.failed = false;
 
       try {
-        let res = await Category.DeleteTag(id);
-        if (res.data.success) {
+        let res = await pepelingApi.Delete(id);
+        if (res.data.status === 200) {
           this.success = true;
           this.notifyVue();
-          this.loadStart();
+          this.getPepeling();
         } else {
           this.failed = true;
         }
@@ -315,7 +298,7 @@ export default {
       alert(`You want to delete row with id: ${row.item._id}`);
     },
     info(item, index, button) {
-      this.infoModal.title = `${item.name}`;
+      this.infoModal.title = `${item.title}`;
       this.infoModal.content = item._id;
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
@@ -324,16 +307,15 @@ export default {
       this.infoModal.content = "";
     },
     onFiltered(filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    async loadStart() {
+    async getPepeling() {
       try {
         this.isLoading = true;
-        let res = await Category.GetTag();
-        this.items = res.data.data;
-
+        let res = await pepelingApi.Get();
+        this.items = res.data.data.data;
+        console.log(res);
         this.totalRows = this.items.length;
         this.isLoading = false;
       } catch (error) {
@@ -349,7 +331,7 @@ export default {
     },
   },
   created() {
-    this.loadStart();
+    this.getPepeling();
   },
 };
 </script>

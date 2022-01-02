@@ -53,52 +53,6 @@ const router = new VueRouter({
     }
   }
 });
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     if (Vue.cookie.get('data_user') === null) {
-//       next({
-//         path: '/login',
-//         params: { nextUrl: to.fullPath }
-//       })
-//     } else {
-//       let user = JSON.parse(Vue.cookie.get('data_user'))
-//       if (to.matched.some(record => record.meta.is_admin)) {
-//         if (user.role == 'admin') {
-//           next()
-//         }
-//         else {
-//           next({
-//             path: '/login'
-//           })
-//         }
-//       } else if (to.matched.some(record => record.meta.is_user)) {
-//         if (user.role == 'user') {
-//           next()
-//         }
-//         else {
-//           next({
-//             path: '/login'
-//           })
-//         }
-//       }
-//       else if (to.matched.some(record => record.meta.is_doctor)) {
-//         if (user.role == 'dokter') {
-//           next()
-//         }
-//         else {
-//           next({
-//             path: '/login'
-//           })
-//         }
-//       }
-//       else {
-//         next()
-//       }
-//     }
-//   } else {
-//     next()
-//   }
-// })
 
 /* eslint-disable no-new */
 new Vue({
