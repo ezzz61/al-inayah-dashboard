@@ -63,6 +63,22 @@ const routes = [
         name: "update_pepeling",
         component: () => import("src/pages/Pepeling/Update.vue")
       },
+      {
+        path: "lembaga-pendidikan",
+        name: "lembaga-pendidikan",
+        component: () =>
+          import("src/pages/LembagaPendidikan/LembagaPendidikan.vue")
+      },
+      {
+        path: "lembaga-pendidikan/add",
+        name: "add_lembaga-pendidikan",
+        component: () => import("src/pages/LembagaPendidikan/Add.vue")
+      },
+      {
+        path: "lembaga-pendidikan/update/:id",
+        name: "update_lembaga-pendidikan",
+        component: () => import("src/pages/LembagaPendidikan/Update.vue")
+      },
 
       {
         path: "user",

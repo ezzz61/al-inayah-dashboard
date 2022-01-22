@@ -4,13 +4,7 @@
       <b-row class="justify-content-center mt-5">
         <b-col md="4" class="text-center">
           <b-card-group deck>
-            <b-card
-              header="AL-INAYAH ADMIN"
-              header-tag="header"
-              footer="Welcome"
-              footer-tag="footer"
-              title="Login account"
-            >
+            <b-card header-tag="header" footer="Welcome" footer-tag="footer">
               <b-alert
                 v-if="error.length > 0"
                 show
@@ -20,6 +14,8 @@
                 {{ error[0] }}
               </b-alert>
               <b-form @submit.prevent="onSubmit">
+                <img class="my-4" src="../assets/logo.svg" alt="" />
+
                 <b-form-group id="input-group-1" label-for="input-1">
                   <b-form-input
                     id="input-1"

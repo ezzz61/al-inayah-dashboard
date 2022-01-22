@@ -1,75 +1,53 @@
 <template>
   <div class="content">
     <b-tabs content-class="mt-3">
-      <b-tab title="Setting Youtube URL" active>
-        <div class="container-fluid">
-          <p>url youtube:</p>
-          <div v-for="(data, i) in url" :key="i">
-            <b-form-input
-              v-if="i == 0"
-              v-model="url[i]"
-              placeholder="Enter url youtube"
-            ></b-form-input>
-            <b-input-group v-else class="mt-3">
-              <template #append>
-                <b-input-group-text style="cursor:pointer" @click="Remove(i)"
-                  ><strong class="text-danger">X</strong></b-input-group-text
-                >
-              </template>
-              <b-form-input
-                placeholder="Enter url youtube"
-                v-model="url[i]"
-              ></b-form-input>
-            </b-input-group>
+      <b-tab title="Pengaturan Pembukaan Calon Siswa" active>
+        <form @submit.prevent="changeActiveStatus">
+          <div class="row justify-items-center">
+            <div class="col-md-4">
+              <p>Status Pembukaan Calon Siswa Baru :</p>
+            </div>
+            <div class="col-md-4">
+              <b-form-group>
+                <b-form-checkbox v-model="form.is_active" switch size="lg">{{
+                  form.is_active ? "Active" : "Unactive"
+                }}</b-form-checkbox>
+              </b-form-group>
+            </div>
           </div>
-
-          <b-button class="text-center mt-2" @click="Addmore"
-            >add more</b-button
-          >
-          <br />
-        </div>
+          <b-row class="pl-3">
+            <button class="btn outline-primary mt-2 text-center">Simpan</button>
+          </b-row>
+        </form>
       </b-tab>
-      <b-tab title="term of condition">
-        <p>Terms and Condition</p>
-
-        <ckeditor
-          tag-name="textarea"
-          v-model="toc"
-          :config="editorConfig"
-        ></ckeditor>
-      </b-tab>
-      <b-tab title="privacy and policy">
-        <p>privacy and policy</p>
-
-        <ckeditor
-          tag-name="textarea"
-          v-model="pap"
-          :config="editorConfig"
-        ></ckeditor>
+      <b-tab title="Bagian Pengasuh">
+        <form @submit.prevent="saveBagianPengasuh">
+          <p>Bagian Pengasuh</p>
+          <ckeditor
+            tag-name="textarea"
+            v-model="bagianPengasuh.body"
+            :config="editorConfig"
+          ></ckeditor>
+          <b-row class="justify-content-center">
+            <button class="btn outline-primary mt-2 text-center">Simpan</button>
+          </b-row>
+        </form>
       </b-tab>
     </b-tabs>
-    <br />
-    <hr />
-    <b-row class="justify-content-center">
-      <b-col cols="2">
-        <b-button @click="handleSave" class="outline-primary mt-2 text-center"
-          >save
-        </b-button>
-      </b-col>
-    </b-row>
   </div>
 </template>
 <script>
 import ChartCard from "src/components/Cards/ChartCard.vue";
 import StatsCard from "src/components/Cards/StatsCard.vue";
 import LTable from "src/components/Table.vue";
-import Dashboard from "@/api/DashboardApi";
+import bagianPengasuhApi from "@/api/BagianPengasuhApi.js";
+import SettingsApi from "@/api/SettingsApi.js";
 
 export default {
   components: {
     LTable,
     ChartCard,
-    StatsCard
+    StatsCard,
   },
   data() {
     return {
@@ -92,11 +70,16 @@ export default {
         filebrowserUploadUrl: "https://api.niagaplay.com/UploadStatic",
         colorButton_colors:
           "707070,121212,1D4B98,e06040,419f5a,79aacb,ffd44f,f5ede0",
-        colorButton_enableMore: true
+        colorButton_enableMore: true,
       },
       url: [""],
       toc: "",
-      pap: "",
+      form: {
+        is_active: false,
+      },
+      bagianPengasuh: {
+        body: "",
+      },
       month_name: [
         "jan",
         "feb",
@@ -109,7 +92,7 @@ export default {
         "sept",
         "okt",
         "nov",
-        "des"
+        "des",
       ],
       editTooltip: "Edit Task",
       deleteTooltip: "Remove",
@@ -117,7 +100,7 @@ export default {
         total_event_finish: 0,
         total_event_ongoing: 0,
         total_candidate: 0,
-        total_user: 0
+        total_user: 0,
       },
 
       isLoading: false,
@@ -126,73 +109,105 @@ export default {
           {
             title:
               'Sign contract for "What are conference organizers afraid of?"',
-            checked: false
+            checked: false,
           },
           {
             title:
               "Lines From Great Russian Literature? Or E-mails From My Boss?",
-            checked: true
+            checked: true,
           },
           {
             title:
               "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
-            checked: true
+            checked: true,
           },
           {
             title: "Create 4 Invisible User Experiences you Never Knew About",
-            checked: false
+            checked: false,
           },
           { title: 'Read "Following makes Medium better"', checked: false },
-          { title: "Unfollow 5 enemies from twitter", checked: false }
-        ]
-      }
+          { title: "Unfollow 5 enemies from twitter", checked: false },
+        ],
+      },
     };
   },
   async created() {
-    try {
-      this.isLoading = true;
-      let res = await Dashboard.GetUrl();
-      this.data = res.data.data;
-
-      this.url = res.data.data.video_url ? res.data.data.video_url : [""];
-      this.isLoading = false;
-    } catch (error) {
-      console.log(error);
-      this.$notify({
-        message: "somehting went wrong",
-        icon: "fa  fa-exclamation-circle",
-        horizontalAlign: "right",
-        verticalAlign: "top",
-        type: "danger"
-      });
-    }
+    this.getDetailBagianPengasuh();
+    this.getCurrentStatus();
   },
   methods: {
-    Addmore() {
-      this.url.push(null);
-    },
-    Remove(index) {
-      this.url.splice(index, 1);
-    },
-    async handleSave() {
-      let url_data = this.url.filter(el => el != null);
-      let save = await Dashboard.SaveUrl({
-        url: url_data,
-        toc: this.toc,
-        pap: this.pap
-      });
-      console.log(save);
-      if (save.data.success) {
+    async saveBagianPengasuh() {
+      try {
+        const res = await bagianPengasuhApi.Update("61d3026d3a69469a3d2c6cc6", {
+          body: this.bagianPengasuh.body,
+        });
+
+        if (res.data.status === 200) {
+          this.$notify({
+            message: "Bagian Pengasuh Tersimpan",
+            icon: "fa  fa-exclamation-circle",
+            horizontalAlign: "right",
+            verticalAlign: "top",
+            type: "success",
+          });
+        }
+      } catch (error) {
         this.$notify({
-          message: "sucesss",
+          message: "somehting went wrong",
           icon: "fa  fa-exclamation-circle",
           horizontalAlign: "right",
           verticalAlign: "top",
-          type: "success"
+          type: "danger",
         });
       }
-    }
-  }
+    },
+    async getCurrentStatus() {
+      try {
+        const activeCalonSiswa = await SettingsApi.Get();
+
+        if (activeCalonSiswa.data.data.status === 200) {
+          this.form.is_active = activeCalonSiswa.data.data.data.isActive;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getDetailBagianPengasuh() {
+      try {
+        const res = await bagianPengasuhApi.Detail("61d3026d3a69469a3d2c6cc6");
+        if (res.data.status === 200) {
+          this.bagianPengasuh.body = res.data.data.body;
+        }
+      } catch (error) {
+        this.$notify({
+          message: "somehting went wrong",
+          icon: "fa  fa-exclamation-circle",
+          horizontalAlign: "right",
+          verticalAlign: "top",
+          type: "danger",
+        });
+      }
+    },
+    async changeActiveStatus() {
+      try {
+        const activeCalonSiswa = await SettingsApi.Add({
+          isActive: this.form.is_active,
+        });
+        if (activeCalonSiswa.data.status === 200) {
+          this.$notify({
+            message: "Status Pembukaan sudah terupdate",
+            icon: "fa  fa-exclamation-circle",
+            horizontalAlign: "right",
+            verticalAlign: "top",
+            type: "success",
+          });
+          this.getCurrentStatus();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
 };
 </script>
 <style></style>

@@ -24,6 +24,7 @@
     "v-tooltip": "^2.0.0-rc.33",
     "vue": "^2.6.12",
     "vue-cookie": "^1.1.4",
+    "vue-json-excel": "^0.3.0",
     "vue-jwt-decode": "^0.1.0",
     "vue-notifyjs": "^0.4.3",
     "vue-router": "^3.0.2",

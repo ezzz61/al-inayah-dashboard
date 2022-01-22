@@ -300,6 +300,24 @@
                   </div>
                 </div>
 
+                <h5>Lembaga Pendidikan Yang Di Tuju</h5>
+                <!-- data diri Lembaga Pendidikan -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <b-form-select
+                      v-model="selectedLembagaPendidikan"
+                      :options="lembagaPendidikan"
+                      class="mb-3"
+                    >
+                      <!-- This slot appears above the options from 'options' prop -->
+                      <template #first>
+                        <b-form-select-option :value="null" disabled
+                          >-- Please select an option --</b-form-select-option
+                        >
+                      </template>
+                    </b-form-select>
+                  </div>
+                </div>
                 <!-- <b-form-group
                   id="input-group-1"
                   label="image thumbnail:"
@@ -365,6 +383,7 @@
 
 <script>
 import calonSiswaApi from "@/api/CalonSiswaApi";
+import LembagaPendidikanApi from "@/api/LembagaPendidikanApi";
 import VueUploadMultipleImage from "vue-upload-multiple-image";
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
@@ -381,46 +400,37 @@ export default {
       ],
       option_tag: [{ value: null, text: "Please select tag", disabled: true }],
       selected: null,
-
-      images: [],
-      allImage: [],
-      url: null,
-      urlBanner: null,
       angka: 2,
-      file: null,
-      fileBanner: null,
       form: {},
       isLoading: false,
       options: [],
       show: true,
       messageError: "",
       showError: false,
+      lembagaPendidikan: [],
+      selectedLembagaPendidikan: null,
     };
   },
-  methods: {
-    onFileChange(e) {
-      const file = e.target.files[0];
-      this.url = URL.createObjectURL(file);
-    },
-    onFileChangeBanner(e) {
-      const file = e.target.files[0];
-      this.urlBanner = URL.createObjectURL(file);
-    },
-    // async uploadImageSuccess(formData, index, fileList) {
-    //   let imgdata = new FormData();
 
-    //   if (fileList.length < 5) {
-    //     for (var pair of formData.entries()) {
-    //       imgdata.append(pair[0], pair[1]);
-    //       this.allImage.push(pair[1]);
-    //     }
-    //   }
-    // },
+  methods: {
     async onSubmit() {
       this.isLoading = true;
-      let data = this.form;
+      let data = {
+        ...this.form,
+        lembaga_tujuan: this.selectedLembagaPendidikan,
+      };
       try {
         let res = await calonSiswaApi.Add(data);
+        if (res.data.status === 403) {
+          this.$notify({
+            message: res.data.data,
+            icon: "fa fa-check-circle",
+            horizontalAlign: "right",
+            verticalAlign: "top",
+            type: "danger",
+          });
+        }
+
         if (res.data.status === 200) {
           this.success = true;
           this.$notify({
@@ -450,6 +460,27 @@ export default {
         console.log(err);
       }
     },
+    async getLembagaPendidikan() {
+      try {
+        const res = await LembagaPendidikanApi.Get();
+        console.log(res);
+        if (res.data.data.status === 200) {
+          let mapLembaga = [];
+          res.data.data.data.map((lembaga) => {
+            mapLembaga.push({
+              text: lembaga.name,
+              value: lembaga._id,
+            });
+          });
+          this.lembagaPendidikan = mapLembaga;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  mounted() {
+    this.getLembagaPendidikan();
   },
 };
 </script>

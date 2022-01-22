@@ -1,5 +1,6 @@
 <template>
   <b-container fluid>
+    <!-- User Interface controls -->
     <notifications> </notifications>
     <b-row class="mt-5">
       <b-col lg="6" class="my-1">
@@ -39,28 +40,10 @@
           <div class="col-6">
             <button
               class="btn btn-icon btn-primary btn-fill"
-              @click="$router.push({ path: '/admin/calon-siswa/add' })"
+              @click="$router.push({ path: '/admin/lembaga-pendidikan/add' })"
             >
-              Tambah Calon Siswa
+              Tambah Lembaga Pendidikan
             </button>
-          </div>
-          <div class="col-6">
-            <div class="mb-2">
-              <input
-                v-model="namaFile"
-                type="text"
-                placeholder="Masukkan nama file..."
-              />
-            </div>
-            <download-excel
-              class="btn btn-success btn-disabled"
-              :data="selected"
-              :fields="json_fields"
-              worksheet="My Worksheet"
-              :name="`${namaFile.length ? namaFile : 'filename.xls'}`"
-            >
-              Export To Excel
-            </download-excel>
           </div>
         </div>
       </b-col>
@@ -105,7 +88,7 @@
             show-empty
             class="ml-2"
             stacked="md"
-            :items="calonSiswaData"
+            :items="items"
             :fields="fields"
             :current-page="currentPage"
             :per-page="perPage"
@@ -115,28 +98,13 @@
             :sort-desc.sync="sortDesc"
             :sort-direction="sortDirection"
             @filtered="onFiltered"
-            ref="selectableTable"
-            :select-mode="selectMode"
-            selectable
-            @row-selected="onRowSelected"
           >
-            <!-- Example scoped slot for select state illustrative purposes -->
-            <template #cell(selected)="{ rowSelected }">
-              <template v-if="rowSelected">
-                <span aria-hidden="true">&check;</span>
-                <span class="sr-only">Selected</span>
-              </template>
-              <template v-else>
-                <span aria-hidden="true">&nbsp;</span>
-                <span class="sr-only">Not selected</span>
-              </template>
-            </template>
             <template #cell(actions)="row">
               <button
                 class="btn btn-icon btn-info mx-1"
                 @click="
                   $router.push({
-                    name: 'calon-siswa_update',
+                    name: 'update_lembaga-pendidikan',
                     params: { id: row.item._id },
                   })
                 "
@@ -190,11 +158,11 @@
     <b-modal
       @ok="handleOk(infoModal.content)"
       :id="infoModal.id"
-      :title="'Delete ' + infoModal.title"
+      :title="'Delete ' + infoModal.name"
       @hide="resetInfoModal"
     >
       <pre>
-  are you sure want to delete <strong>{{ infoModal.title }} </strong>from Calon Siswa list ?</pre>
+are you sure want to delete <strong>{{ infoModal.name }} </strong>from  Lembaga Pendidikan list ?</pre>
     </b-modal>
   </b-container>
 </template>
@@ -202,7 +170,7 @@
 <script>
 import Card from "src/components/Cards/Card.vue";
 import LoadingTable from "src/components/LoadingTable.vue";
-import calonSiswaApi from "@/api/CalonSiswaApi";
+import lembagaPendidikanApi from "@/api/LembagaPendidikanApi";
 
 export default {
   components: {
@@ -211,30 +179,8 @@ export default {
   },
   data() {
     return {
-      selectMode: "multi",
-      selected: [],
       success: false,
-      calonSiswaData: [],
-      namaFile: "",
-      json_fields: {
-        "Mendaftar Pada": "createdAt",
-        NISN: "no_nisn",
-        "Nama Lengkap": "nama",
-        "Tanggal Lahir": "tanggal_lahir",
-        "Jenis Kelamin": "jenis_kelamin",
-        "No Hp": "no_telpon",
-        "E-Mail": "email",
-        Alamat: "alamat",
-        "Sekolah Asal": "nama_sekolah_asal",
-        "Tahun Kelulusan": "tahun_kelulusan",
-        "Nilai Rata-Rata": "nilai_rata_rata",
-        "Nama Ayah": "nama_ayah",
-        "Pekerjaan Ayah": "pekerjaan_ayah",
-        "Nama Ibu": "nama_ibu",
-        "Pekerjaan Ibu": "pekerjaan_ibu",
-        "Nama Wali": "nama_wali",
-        "Pekerjaan Wali": "pekerjaan_wali",
-      },
+      items: [],
       month_name: [
         "januari",
         "februari",
@@ -257,73 +203,22 @@ export default {
       },
       fields: [
         {
-          key: "createdAt",
-          label: "Mendaftar pada",
+          key: "name",
+          label: "Nama Lembaga Pendidikan",
           sortable: true,
           sortDirection: "desc",
         },
         {
-          key: "no_nisn",
-          label: "NISN",
+          key: "is_active",
+          label: "status",
           sortable: true,
           sortDirection: "desc",
+          formatter: (value, key, item) => {
+            return item.is_active == true ? "Active" : "Unactive";
+          },
         },
-        {
-          key: "nama",
-          label: "Nama Lengkap",
-          sortable: true,
-          sortDirection: "desc",
-        },
-        {
-          key: "jenis_kelamin",
-          label: "Jenis Kelamin",
-          sortable: true,
-          sortDirection: "desc",
-        },
-        {
-          key: "nama_sekolah_asal",
-          label: "Nama Sekolah Asal",
-          sortable: true,
-          sortDirection: "desc",
-        },
-        {
-          key: "email",
-          label: "Email",
-          sortable: true,
-          sortDirection: "desc",
-        },
-        {
-          key: "nilai_rata_rata",
-          label: "Nilai Rata Rata",
-          sortable: true,
-          sortDirection: "desc",
-        },
-
-        // {
-        //   key: "is_active",
-        //   label: "status",
-        //   sortable: true,
-        //   sortDirection: "desc",
-        //   formatter: (value, key, item) => {
-        //     return item.is_active == true ? "Active" : "Unactive";
-        //   },
-        // },
 
         { key: "actions", label: "Actions" },
-      ],
-      month_name: [
-        "JAN",
-        "FEB",
-        "MAR",
-        "APR",
-        "MAY",
-        "JUN",
-        "JUL",
-        "AUG",
-        "SEP",
-        "OCT",
-        "NOV",
-        "DEC",
       ],
       totalRows: 1,
       currentPage: 1,
@@ -354,9 +249,6 @@ export default {
     this.totalRows = this.items.length;
   },
   methods: {
-    onRowSelected(items) {
-      this.selected = items;
-    },
     notifyVue() {
       const notification = {
         template: `<span>Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for every web developer.</span>`,
@@ -374,11 +266,11 @@ export default {
       this.failed = false;
 
       try {
-        let res = await calonSiswaApi.Delete(id);
+        let res = await lembagaPendidikanApi.Delete(id);
         if (res.data.status === 200) {
           this.success = true;
           this.notifyVue();
-          this.getCalonSiswa();
+          this.getPepeling();
         } else {
           this.failed = true;
         }
@@ -394,7 +286,7 @@ export default {
       alert(`You want to delete row with id: ${row.item._id}`);
     },
     info(item, index, button) {
-      this.infoModal.title = `${item.nama}`;
+      this.infoModal.title = `${item.title}`;
       this.infoModal.content = item._id;
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
@@ -406,30 +298,12 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    async getCalonSiswa() {
+    async getPepeling() {
       try {
         this.isLoading = true;
-        let res = await calonSiswaApi.Get();
-        const calonSiswa = res.data.data.data;
-        let filtredCalonSiswa = [];
-
-        // change date type
-        calonSiswa.map((siswa) => {
-          let current_datetime = new Date();
-
-          filtredCalonSiswa.push({
-            ...siswa,
-            createdAt:
-              current_datetime.getDate() +
-              "-" +
-              this.month_name[current_datetime.getMonth(siswa.createdAt)] +
-              "-" +
-              current_datetime.getFullYear(),
-          });
-        });
-
-        this.calonSiswaData = filtredCalonSiswa;
-        this.totalRows = this.calonSiswaData.length;
+        let res = await lembagaPendidikanApi.Get();
+        this.items = res.data.data.data;
+        this.totalRows = this.items.length;
         this.isLoading = false;
       } catch (error) {
         this.$notify({
@@ -444,7 +318,7 @@ export default {
     },
   },
   created() {
-    this.getCalonSiswa();
+    this.getPepeling();
   },
 };
 </script>

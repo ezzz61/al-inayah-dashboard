@@ -31,6 +31,10 @@ import routes from "./routes/routes";
 
 import "./registerServiceWorker";
 // plugin setup
+import JsonExcel from "vue-json-excel";
+
+Vue.component("downloadExcel", JsonExcel);
+
 Vue.use(VueCookie);
 Vue.use(VueNotify);
 Vue.use(CKEditor);

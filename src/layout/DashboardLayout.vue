@@ -18,6 +18,11 @@
         <p>Pengumuman</p>
       </sidebar-link>
 
+      <sidebar-link to="/admin/lembaga-pendidikan">
+        <i class="nc-icon nc-istanbul"></i>
+        <p>Lembaga pendidikan</p>
+      </sidebar-link>
+
       <sidebar-link to="/admin/calon-siswa">
         <i class="nc-icon nc-single-02"></i>
         <p>Calon Siswa</p>
