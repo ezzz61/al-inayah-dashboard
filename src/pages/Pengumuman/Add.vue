@@ -170,28 +170,21 @@ export default {
   methods: {
     onFileChange(e) {
       const file = e.target.files[0];
+
       this.url = URL.createObjectURL(file);
     },
-    onFileChangeBanner(e) {
-      const file = e.target.files[0];
-      this.urlBanner = URL.createObjectURL(file);
-    },
-    // async uploadImageSuccess(formData, index, fileList) {
-    //   let imgdata = new FormData();
-
-    //   if (fileList.length < 5) {
-    //     for (var pair of formData.entries()) {
-    //       imgdata.append(pair[0], pair[1]);
-    //       this.allImage.push(pair[1]);
-    //     }
-    //   }
-    // },
     async onSubmit(evt) {
       evt.preventDefault();
       this.isLoading = true;
-      let data = this.form;
+
       try {
-        let res = await pengumumanApi.Add(data);
+        const formData = new FormData();
+        formData.append("image", this.file);
+        formData.append("title", this.form.title);
+        formData.append("is_active", this.form.is_active);
+        formData.append("body", this.form.body);
+
+        let res = await pengumumanApi.Add(formData);
         if (res.data.status === 200) {
           this.success = true;
           this.$notify({

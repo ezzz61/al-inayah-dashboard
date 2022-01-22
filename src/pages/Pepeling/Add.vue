@@ -192,22 +192,20 @@ export default {
       const file = e.target.files[0];
       this.urlBanner = URL.createObjectURL(file);
     },
-    // async uploadImageSuccess(formData, index, fileList) {
-    //   let imgdata = new FormData();
-
-    //   if (fileList.length < 5) {
-    //     for (var pair of formData.entries()) {
-    //       imgdata.append(pair[0], pair[1]);
-    //       this.allImage.push(pair[1]);
-    //     }
-    //   }
-    // },
     async onSubmit(evt) {
       evt.preventDefault();
       this.isLoading = true;
-      let data = this.form;
       try {
-        let res = await Pepeling.Add(data);
+        const formData = new FormData();
+        formData.append("title", this.form.title);
+        formData.append("body", this.form.body);
+        formData.append("writter", this.form.writter);
+        formData.append("is_active", this.form.is_active);
+
+        if (this.file) {
+          formData.append("image", this.file);
+        }
+        let res = await Pepeling.Add(formData);
 
         if (res.data.status === 200) {
           this.success = true;
@@ -223,70 +221,6 @@ export default {
           });
           this.isLoading = false;
         }
-        // if (res.data.success) {
-        //   if (this.fileBanner && this.form.potition_type == "headline") {
-        //     let form_file = new FormData();
-        //     form_file.append("file", this.file);
-        //     let save_image = await Article.UploadBanner(
-        //       res.data.data._id,
-        //       form_file
-        //     );
-        //     if (!save_image.data.success) {
-        //       this.false = true;
-        //       this.$notify({
-        //         message: "failed upload",
-        //         icon: "fa fa-times-circle",
-        //         horizontalAlign: "right",
-        //         verticalAlign: "top",
-        //         type: "danger",
-        //       });
-
-        //       this.isLoading = false;
-        //       return;
-        //     }
-        //   }
-        //   if (this.file) {
-        //     let form_file = new FormData();
-        //     form_file.append("file", this.file);
-        //     let save_image = await Article.Upload(res.data.data._id, form_file);
-        //     if (!save_image.data.success) {
-        //       this.false = true;
-        //       this.$notify({
-        //         message: "failed upload",
-        //         icon: "fa fa-times-circle",
-        //         horizontalAlign: "right",
-        //         verticalAlign: "top",
-        //         type: "danger",
-        //       });
-
-        //       this.isLoading = false;
-        //       return;
-        //     }
-        //   }
-        //   this.success = true;
-        //   this.$notify({
-        //     message: "success",
-        //     icon: "fa fa-check-circle",
-        //     horizontalAlign: "right",
-        //     verticalAlign: "top",
-        //     type: "success",
-        //   });
-        //   this.$router.push({
-        //     path: "/admin/Article",
-        //   });
-        //   this.isLoading = false;
-        // } else {
-        //   this.isLoading = false;
-        //   this.showError = true;
-        //   this.messageError = res.data.message;
-        //   this.$notify({
-        //     message: res.data.message,
-        //     icon: "fa fa-times-circle",
-        //     horizontalAlign: "right",
-        //     verticalAlign: "top",
-        //     type: "danger",
-        //   });
-        // }
       } catch (err) {
         this.isLoading = false;
         console.log(err);

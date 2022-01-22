@@ -113,6 +113,7 @@
 <script>
 import VueUploadMultipleImage from "vue-upload-multiple-image";
 import pengumumanApi from "../../api/PengumumanApi";
+import BaseUrl from "../../api/BaseUrl";
 
 export default {
   components: {
@@ -147,10 +148,7 @@ export default {
       option_tag: [{ value: null, text: "Please select tag", disabled: true }],
       selected: null,
 
-      images: [],
-      allImage: [],
-      urlBanner: null,
-      fileBanner: null,
+      base: BaseUrl.baseURL,
       url: null,
       angka: 2,
       file: null,
@@ -168,46 +166,21 @@ export default {
     };
   },
   methods: {
-    // onFileChangeBanner(e) {
-    //   const file = e.target.files[0];
-    //   this.urlBanner = URL.createObjectURL(file);
-    // },
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
     },
-    // async uploadImageSuccess(formData, index, fileList) {
-    //   let imgdata = new FormData();
-    //   if (fileList.length < 5) {
-    //     for (var pair of formData.entries()) {
-    //       imgdata.append(pair[0], pair[1]);
-    //       this.allImage.push(pair[1]);
-    //     }
-    //   }
-    // },
-    // beforeRemove(index, done, fileList) {
-    //   console.log("index", index, fileList);
-    //   var r = confirm("remove image");
-    //   if (r == true) {
-    //     done();
-    //   } else {
-    //     console.log("x");
-    //   }
-    //   if (fileList.length === 0) {
-    //     this.allImage = null;
-    //   }
-    // },
-    // editImage(formData, index, fileList) {
-    //   for (var pair of formData.entries()) {
-    //     imgdata.append(pair[0], pair[1]);
-    //     this.allImage.push(pair[1]);
-    //   }
-    // },
     async onSubmit() {
       this.isLoading = true;
-      let data = this.form;
       try {
-        let res = await pepelingApi.Update(this.$route.params.id, data);
+        const formData = new FormData();
+        formData.append("title", this.form.title);
+        formData.append("is_active", this.form.is_active);
+        formData.append("body", this.form.body);
+        if (this.file) {
+          formData.append("image", this.file);
+        }
+        let res = await pengumumanApi.Update(this.$route.params.id, formData);
         if (res.data.status === 200) {
           this.success = true;
           this.$notify({
@@ -247,7 +220,7 @@ export default {
 
       if (pengumumanDetail.data.status === 200) {
         this.form = pengumumanDetail.data.data;
-        console.log(this.form);
+        this.url = `${this.base}/${pengumumanDetail.data.data.image}`;
       } else {
         this.$notify({
           message: "something went wrong",

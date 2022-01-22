@@ -8,7 +8,7 @@
           <card>
             <div>
               <h4 class="text-center font-weight-bold">
-                Edit Pepeling Kahirupan
+                Edit Lembaga Pendidikan
               </h4>
               <b-alert :show="showError" variant="danger">{{
                 messageError
