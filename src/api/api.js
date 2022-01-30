@@ -8,7 +8,7 @@ export default () => {
         ? localStorage.getItem("token")
         : null
     },
-    baseURL: `http://localhost:8080/api`
+    baseURL: `https://al-inayah.herokuapp.com/api`
   });
   instance.interceptors.response.use(
     function(response) {
