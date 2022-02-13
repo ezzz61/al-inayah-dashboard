@@ -59,7 +59,7 @@
                 >
                   <b-form-select
                     v-model="form.role"
-                    :options="['admin', 'user']"
+                    :options="['ADMIN', 'PPSB']"
                     size="l"
                     class="mt-2"
                   ></b-form-select>

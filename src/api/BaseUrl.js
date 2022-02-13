@@ -4,5 +4,5 @@ export default {
 
   //STAGING
   // baseURL: `http://localhost:8080`
-  baseURL: `https://al-inayah.herokuapp.com/"`
+  baseURL: `https://al-inayah.herokuapp.com`
 };

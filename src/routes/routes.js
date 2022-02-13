@@ -1,4 +1,5 @@
 import DashboardLayout from "../layout/DashboardLayout.vue";
+import Vue from "vue";
 // GeneralViews
 import NotFound from "../pages/NotFoundPage.vue";
 import Login from "src/pages/Login.vue";
@@ -15,6 +16,7 @@ const routes = [
     redirect: "/admin/overview"
   },
   {
+    name: "login",
     path: "/login",
     component: Login
   },
@@ -22,6 +24,17 @@ const routes = [
     path: "/admin",
     component: DashboardLayout,
     redirect: "/admin/overview",
+    beforeEnter(to, from, next) {
+      // logic here
+      // const { $cookie } = router.app.config.globalProperties;
+      const data = Vue.cookie.get("data_user");
+      const user = JSON.parse(data);
+      if ((user && user.role === "ADMIN") || (user && user.role === "PPSB")) {
+        next();
+      } else {
+        next({ name: "login" });
+      }
+    },
     children: [
       {
         path: "overview",
@@ -31,69 +44,212 @@ const routes = [
       {
         path: "setup",
         name: "setup",
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        },
         component: () => import("src/pages/Setup.vue")
       },
       {
         path: "pengumuman",
         name: "pengumuman",
-        component: () => import("src/pages/Pengumuman/Pengumuman.vue")
+        component: () => import("src/pages/Pengumuman/Pengumuman.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
       {
         path: "pengumuman/add",
         name: "add_pengumuman",
-        component: () => import("src/pages/Pengumuman/Add.vue")
+        component: () => import("src/pages/Pengumuman/Add.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
       {
         path: "pengumuman/update/:id",
         name: "update_pengumuman",
-        component: () => import("src/pages/Pengumuman/Update.vue")
+        component: () => import("src/pages/Pengumuman/Update.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
       {
         path: "pepeling",
         name: "pepeling",
-        component: () => import("src/pages/Pepeling/Pepeling.vue")
+        component: () => import("src/pages/Pepeling/Pepeling.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
       {
         path: "pepeling/add",
         name: "add_pepeling",
-        component: () => import("src/pages/Pepeling/Add.vue")
+        component: () => import("src/pages/Pepeling/Add.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
       {
         path: "pepeling/update/:id",
         name: "update_pepeling",
-        component: () => import("src/pages/Pepeling/Update.vue")
+        component: () => import("src/pages/Pepeling/Update.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
       {
         path: "lembaga-pendidikan",
         name: "lembaga-pendidikan",
         component: () =>
-          import("src/pages/LembagaPendidikan/LembagaPendidikan.vue")
+          import("src/pages/LembagaPendidikan/LembagaPendidikan.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
       {
         path: "lembaga-pendidikan/add",
         name: "add_lembaga-pendidikan",
-        component: () => import("src/pages/LembagaPendidikan/Add.vue")
+        component: () => import("src/pages/LembagaPendidikan/Add.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
       {
         path: "lembaga-pendidikan/update/:id",
         name: "update_lembaga-pendidikan",
-        component: () => import("src/pages/LembagaPendidikan/Update.vue")
+        component: () => import("src/pages/LembagaPendidikan/Update.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
 
       {
         path: "user",
         name: "User",
-        component: () => import("src/pages/User/User.vue")
+        component: () => import("src/pages/User/User.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
       {
         path: "user/u/:id",
         name: "User_update",
-        component: () => import("src/pages/User/Update.vue")
+        component: () => import("src/pages/User/Update.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
       {
         path: "user/add",
         name: "User_add",
-        component: () => import("src/pages/User/Add.vue")
+        component: () => import("src/pages/User/Add.vue"),
+        beforeEnter(to, from, next) {
+          // logic here
+          // const { $cookie } = router.app.config.globalProperties;
+          const data = Vue.cookie.get("data_user");
+          const user = JSON.parse(data);
+          if (user && user.role === "ADMIN") {
+            next();
+          } else {
+            next({ name: "Overview" });
+          }
+        }
       },
       {
         path: "calon-siswa",

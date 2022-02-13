@@ -58,7 +58,7 @@
                 >
                   <b-form-select
                     v-model="form.role"
-                    :options="['admin', 'user']"
+                    :options="['ADMIN', 'PPSB']"
                     size="l"
                     class="mt-2"
                   ></b-form-select>
@@ -107,6 +107,7 @@
 <script>
 import VueUploadMultipleImage from "vue-upload-multiple-image";
 import User from "@/api/UserApi";
+import CryptoJS from "crypto-js";
 
 export default {
   components: {
@@ -154,7 +155,7 @@ export default {
       let data = this.form;
       try {
         let res = await User.Update(this.$route.params.id, data);
-        if (res.data.success) {
+        if (res.data.status === 200) {
           this.success = true;
           this.$notify({
             message: "success",
@@ -186,9 +187,18 @@ export default {
     },
   },
   async created() {
+    const cryptoSec = "udontknowitforsure";
     try {
       let getdetail = await User.Detail(this.$route.params.id);
-      this.form = getdetail.data.data;
+      const decryptPassword = CryptoJS.AES.decrypt(
+        getdetail.data.data.password,
+        cryptoSec
+      );
+      const userPassword = decryptPassword.toString(CryptoJS.enc.Utf8);
+      this.form = {
+        ...getdetail.data.data,
+        password: userPassword,
+      };
     } catch (error) {
       console.log(error);
       this.$notify({

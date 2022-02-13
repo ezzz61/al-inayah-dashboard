@@ -87,33 +87,34 @@ export default {
           try {
             var expired = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
             let data_user = await this.$jwtDec.decode(res.data.data.token);
-            if (data_user.role != "admin") {
+
+            if (data_user.role === "ADMIN" || data_user.role === "PPSB") {
+              this.$cookie.set("token", res.data.data.token, {
+                expires: expired,
+              });
+              this.$cookie.set("data_user", JSON.stringify(data_user), {
+                expires: expired,
+              });
+              // localStorage.setItem("token", res.data.data.token);
+              // localStorage.setItem("data_user", JSON.stringify(data_user));
+              this.$notify({
+                message: "success login",
+                icon: "fa fa-check-circle",
+                horizontalAlign: "center",
+                verticalAlign: "top",
+                type: "success",
+              });
+              this.$router.push({ path: "/admin" });
+            } else {
               return this.error.push("Unautorize");
             }
-
-            this.$cookie.set("token", res.data.data.token, {
-              expires: expired,
-            });
-            this.$cookie.set("data_user", JSON.stringify(data_user), {
-              expires: expired,
-            });
-            localStorage.setItem("token", res.data.data.token);
-            localStorage.setItem("data_user", JSON.stringify(data_user));
-            this.$notify({
-              message: "success login",
-              icon: "fa fa-check-circle",
-              horizontalAlign: "center",
-              verticalAlign: "top",
-              type: "success",
-            });
-            this.$router.push({ path: "/admin" });
           } catch (err) {
             console.log(err);
           }
           this.isLoading = false;
         } else {
           this.isLoading = false;
-          this.error.push(res.data.message);
+          this.error.push(res.data.data);
         }
       } catch (error) {
         this.isLoading = false;

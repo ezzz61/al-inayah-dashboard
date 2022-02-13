@@ -53,6 +53,7 @@
               />
             </div>
             <download-excel
+              :stringifyLongNum="false"
               class="btn btn-success btn-disabled"
               :data="selected"
               :fields="json_fields"
@@ -203,6 +204,7 @@
 import Card from "src/components/Cards/Card.vue";
 import LoadingTable from "src/components/LoadingTable.vue";
 import calonSiswaApi from "@/api/CalonSiswaApi";
+import moment from "moment";
 
 export default {
   components: {
@@ -211,6 +213,7 @@ export default {
   },
   data() {
     return {
+      moment: moment,
       selectMode: "multi",
       selected: [],
       success: false,
@@ -218,13 +221,24 @@ export default {
       namaFile: "",
       json_fields: {
         "Mendaftar Pada": "createdAt",
-        NISN: "no_nisn",
+        NISN: {
+          field: "no_nisn",
+          callback: (value) => {
+            return `${value} '`;
+          },
+        },
         "Nama Lengkap": "nama",
         "Tanggal Lahir": "tanggal_lahir",
         "Jenis Kelamin": "jenis_kelamin",
-        "No Hp": "no_telpon",
+        "No Hp": {
+          field: "no_telpon",
+          callback: (value) => {
+            return `${value} '`;
+          },
+        },
         "E-Mail": "email",
         Alamat: "alamat",
+        "Lembaga Tujuan": "lembaga_tujuan",
         "Sekolah Asal": "nama_sekolah_asal",
         "Tahun Kelulusan": "tahun_kelulusan",
         "Nilai Rata-Rata": "nilai_rata_rata",
@@ -235,20 +249,6 @@ export default {
         "Nama Wali": "nama_wali",
         "Pekerjaan Wali": "pekerjaan_wali",
       },
-      month_name: [
-        "januari",
-        "februari",
-        "maret",
-        "april",
-        "mei",
-        "juni",
-        "juli",
-        "agustus",
-        "september",
-        "oktober",
-        "november",
-        "desember",
-      ],
       isLoading: false,
       failed: false,
       type: ["success", "danger"],
@@ -287,8 +287,8 @@ export default {
           sortDirection: "desc",
         },
         {
-          key: "email",
-          label: "Email",
+          key: "lembaga_tujuan",
+          label: "Lembaga Tujuan",
           sortable: true,
           sortDirection: "desc",
         },
@@ -298,32 +298,7 @@ export default {
           sortable: true,
           sortDirection: "desc",
         },
-
-        // {
-        //   key: "is_active",
-        //   label: "status",
-        //   sortable: true,
-        //   sortDirection: "desc",
-        //   formatter: (value, key, item) => {
-        //     return item.is_active == true ? "Active" : "Unactive";
-        //   },
-        // },
-
         { key: "actions", label: "Actions" },
-      ],
-      month_name: [
-        "JAN",
-        "FEB",
-        "MAR",
-        "APR",
-        "MAY",
-        "JUN",
-        "JUL",
-        "AUG",
-        "SEP",
-        "OCT",
-        "NOV",
-        "DEC",
       ],
       totalRows: 1,
       currentPage: 1,
@@ -415,16 +390,14 @@ export default {
 
         // change date type
         calonSiswa.map((siswa) => {
-          let current_datetime = new Date();
-
           filtredCalonSiswa.push({
             ...siswa,
-            createdAt:
-              current_datetime.getDate() +
-              "-" +
-              this.month_name[current_datetime.getMonth(siswa.createdAt)] +
-              "-" +
-              current_datetime.getFullYear(),
+            no_nisn: siswa.no_nisn.toString(),
+            createdAt: this.moment(siswa.createdAt).format("l"),
+            tanggal_lahir: this.moment(siswa.tanggal_lahir).format("l"),
+            lembaga_tujuan: siswa.lembaga_tujuan
+              ? siswa.lembaga_tujuan.name
+              : "-",
           });
         });
 

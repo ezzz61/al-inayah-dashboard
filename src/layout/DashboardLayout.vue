@@ -8,17 +8,17 @@
         <p>Dashboard</p>
       </sidebar-link>
 
-      <sidebar-link to="/admin/pepeling">
+      <sidebar-link v-if="role === 'ADMIN'" to="/admin/pepeling">
         <i class="nc-icon nc-caps-small"></i>
         <p>Pepeling Kahirupan</p>
       </sidebar-link>
 
-      <sidebar-link to="/admin/pengumuman">
+      <sidebar-link v-if="role === 'ADMIN'" to="/admin/pengumuman">
         <i class="nc-icon nc-single-copy-04"></i>
         <p>Pengumuman</p>
       </sidebar-link>
 
-      <sidebar-link to="/admin/lembaga-pendidikan">
+      <sidebar-link v-if="role === 'ADMIN'" to="/admin/lembaga-pendidikan">
         <i class="nc-icon nc-istanbul"></i>
         <p>Lembaga pendidikan</p>
       </sidebar-link>
@@ -28,12 +28,12 @@
         <p>Calon Siswa</p>
       </sidebar-link>
 
-      <sidebar-link to="/admin/user">
+      <sidebar-link v-if="role === 'ADMIN'" to="/admin/user">
         <i class="nc-icon nc-single-02"></i>
         <p>User</p>
       </sidebar-link>
 
-      <sidebar-link to="/admin/setup">
+      <sidebar-link v-if="role === 'ADMIN'" to="/admin/setup">
         <i class="nc-icon nc-settings-gear-64"></i>
         <p>Setup</p>
       </sidebar-link>
@@ -62,8 +62,8 @@ export default {
     };
   },
   created() {
-    let data = JSON.parse(localStorage.getItem("data_user"));
-    // this.data = data;
+    let data = this.$cookie.get("data_user");
+    this.data = JSON.parse(data);
     // if (localStorage.getItem("data_user") && localStorage.getItem("token")) {
     //   if (token !== null && data.role == "admin") {
     //     this.role = "admin";
@@ -85,7 +85,8 @@ export default {
 
     //   this.$router.push({ path: "/login" });
     // }
-    this.name = data.email;
+    this.name = this.data.email;
+    this.role = this.data.role;
   },
 
   components: {

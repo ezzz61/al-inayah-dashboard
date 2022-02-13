@@ -136,7 +136,8 @@ export default {
           "Verdana/Verdana, Geneva, sans-serif;" +
           "Kiwi_maru/Kiwi maru;" +
           "Karla/Karla",
-        extraPlugins: "uploadimage,colorbutton, font,uicolor,colordialog ",
+        extraPlugins:
+          "uploadimage,colorbutton, font,uicolor,colordialog, justify ",
         filebrowserUploadUrl: "https://api.niagaplay.com/UploadStatic",
         colorButton_colors:
           "707070,121212,1D4B98,e06040,419f5a,79aacb,ffd44f,f5ede0",
