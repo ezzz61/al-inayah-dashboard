@@ -18,6 +18,7 @@
                   label-for="input-1"
                 >
                   <b-form-input
+                    maxlength="30"
                     id="Event"
                     v-model="form.email"
                     type="text"
@@ -45,6 +46,7 @@
                 >
                   <b-form-input
                     id="Event"
+                    maxlength="20"
                     v-model="form.username"
                     type="text"
                     required

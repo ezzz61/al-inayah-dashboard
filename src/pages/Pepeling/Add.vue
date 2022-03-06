@@ -20,6 +20,7 @@
                   label-for="input-1"
                 >
                   <b-form-input
+                    maxlength="40"
                     id="Article"
                     v-model="form.title"
                     type="text"
@@ -46,6 +47,7 @@
                   <b-form-input
                     id="Article"
                     v-model="form.writter"
+                    maxlength="20"
                     type="text"
                     required
                     placeholder="Writter"

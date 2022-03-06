@@ -19,6 +19,7 @@
                 >
                   <b-form-input
                     id="Article"
+                    maxlength="40"
                     v-model="form.title"
                     type="text"
                     required

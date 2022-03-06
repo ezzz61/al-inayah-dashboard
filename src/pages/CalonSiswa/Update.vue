@@ -26,7 +26,7 @@
                       <b-form-input
                         id="Article"
                         v-model="form.nama"
-                        maxlength="30"
+                        maxlength="40"
                         type="text"
                         required
                         placeholder="Masukkan Nama Lengkap"
@@ -94,7 +94,8 @@
                       <b-form-input
                         id="Article"
                         v-model="form.no_telpon"
-                        type="number"
+                        type="text"
+                        @keypress="onlyNumber"
                         maxlength="12"
                         required
                         placeholder="Contoh : 08xxx"
@@ -110,6 +111,7 @@
                       <b-form-input
                         id="Article"
                         v-model="form.email"
+                        maxlength="60"
                         type="text"
                         required
                         placeholder="Contoh : xxx@gmail.com"
@@ -130,6 +132,7 @@
                       <b-form-input
                         id="Article"
                         v-model="form.nama_ayah"
+                        maxlength="40"
                         type="text"
                         required
                         placeholder="Masukkan nama ayah"
@@ -145,6 +148,7 @@
                       <b-form-input
                         id="Article"
                         v-model="form.pekerjaan_ayah"
+                        maxlength="20"
                         type="text"
                         required
                         placeholder="Contoh : Wiraswasta"
@@ -164,6 +168,7 @@
                       <b-form-input
                         id="Article"
                         v-model="form.nama_ibu"
+                        maxlength="40"
                         type="text"
                         required
                         placeholder="Masukkan nama ibu"
@@ -179,6 +184,7 @@
                       <b-form-input
                         id="Article"
                         v-model="form.pekerjaan_ibu"
+                        maxlength="20"
                         type="text"
                         required
                         placeholder="Contoh : Wiraswasta"
@@ -199,7 +205,7 @@
                         id="Article"
                         v-model="form.nama_wali"
                         type="text"
-                        required
+                        maxlength="40"
                         placeholder="Masukkan nama Wali , nama ibu , ayah , atau wali"
                       ></b-form-input>
                     </b-form-group>
@@ -213,8 +219,8 @@
                       <b-form-input
                         id="Article"
                         v-model="form.pekerjaan_wali"
+                        maxlength="20"
                         type="text"
-                        required
                         placeholder="Contoh : Wiraswasta"
                       ></b-form-input>
                     </b-form-group>
@@ -229,6 +235,7 @@
                 >
                   <textarea
                     v-model="form.alamat"
+                    maxlength="255"
                     class="form-control"
                     id="exampleFormControlTextarea1"
                     rows="3"
@@ -245,6 +252,7 @@
                   <b-form-input
                     id="Article"
                     v-model="form.nama_sekolah_asal"
+                    maxlength="50"
                     type="text"
                     required
                     placeholder="Masukkan sekolah asal"
@@ -260,9 +268,11 @@
                       label-for="input-1"
                     >
                       <b-form-input
+                        @keypress="onlyNumber"
                         id="Article"
                         v-model="form.no_nisn"
-                        type="number"
+                        maxlength="15"
+                        type="text"
                         required
                         placeholder="Masukkan No NISN"
                       ></b-form-input>
@@ -277,10 +287,11 @@
                       <b-form-input
                         id="Article"
                         v-model="form.tahun_kelulusan"
-                        type="number"
+                        type="text"
+                        @keypress="onlyNumber"
                         required
                         placeholder="Contoh : 2019"
-                        maxlength="20"
+                        maxlength="4"
                       ></b-form-input>
                     </b-form-group>
                   </div>
@@ -292,19 +303,17 @@
                     >
                       <b-form-input
                         id="Article"
+                        @keypress="onlyNumber"
                         v-model="form.nilai_rata_rata"
-                        type="number"
+                        type="text"
                         required
+                        maxlength="5"
                         placeholder="Contoh : 8.5"
                       ></b-form-input>
                     </b-form-group>
                   </div>
                 </div>
                 <h5>Lembaga Pendidikan Yang Di Tuju</h5>
-                <p>
-                  Lembaga yang dipilih sekarang :
-                  {{ currentLembagaPendidikan.text }}
-                </p>
                 <!-- data diri Lembaga Pendidikan -->
                 <div class="row">
                   <div class="col-md-6">
@@ -393,6 +402,7 @@ import LembagaPendidikanApi from "@/api/LembagaPendidikanApi";
 import VueUploadMultipleImage from "vue-upload-multiple-image";
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
+import moment from "moment";
 
 export default {
   components: {
@@ -401,6 +411,7 @@ export default {
   },
   data() {
     return {
+      moment: moment,
       images: [],
       allImage: [],
       urlBanner: null,
@@ -438,12 +449,36 @@ export default {
     };
   },
   methods: {
+    onlyNumber($event) {
+      const keysAllowed = [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        ".",
+      ];
+      const keyPressed = $event.key;
+      if (!keysAllowed.includes(keyPressed)) {
+        $event.preventDefault();
+      }
+    },
     async onSubmit() {
       this.isLoading = true;
       let data = this.form;
+      const pasreDate = Date.parse(data.tanggal_lahir);
 
       try {
-        let res = await calonSiswaApi.Update(this.$route.params.id, data);
+        let res = await calonSiswaApi.Update(this.$route.params.id, {
+          ...data,
+          lembaga_tujuan: this.selectedLembagaPendidikan,
+          tanggal_lahir: pasreDate,
+        });
         if (res.data.status === 200) {
           this.success = true;
           this.$notify({
@@ -487,10 +522,14 @@ export default {
             });
           });
           this.lembagaPendidikan = mapLembaga;
-          const selectedLembaga = this.lembagaPendidikan.filter(
-            (lembaga) => lembaga.value === this.form.lembaga_tujuan
-          );
-          this.currentLembagaPendidikan = selectedLembaga[0];
+
+          if (this.lembagaPendidikan.length) {
+            const filterCurrentLembaga = this.lembagaPendidikan.filter(
+              (lembaga) => lembaga.value === this.form.lembaga_tujuan._id
+            );
+            this.selectedLembagaPendidikan = filterCurrentLembaga[0].value;
+          }
+          // this.currentLembagaPendidikan = selectedLembaga[0];
         }
       } catch (error) {
         console.log(error);
@@ -504,7 +543,10 @@ export default {
       );
 
       if (getCalonSiswaDetails.data.status === 200) {
-        this.form = getCalonSiswaDetails.data.data;
+        const data = getCalonSiswaDetails.data.data;
+        const formatted = moment(data.tanggal_lahir).format("DD-MM-YYYY");
+        this.form = { ...data, tanggal_lahir: formatted };
+
         this.getLembagaPendidikan();
       } else {
         this.$notify({

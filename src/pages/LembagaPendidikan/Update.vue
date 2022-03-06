@@ -22,6 +22,7 @@
                   <b-form-input
                     id="Article"
                     v-model="form.name"
+                    maxlength="40"
                     type="text"
                     required
                     placeholder="Contoh : Al-Inayah "

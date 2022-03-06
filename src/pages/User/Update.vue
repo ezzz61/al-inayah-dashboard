@@ -17,6 +17,7 @@
                   label-for="input-1"
                 >
                   <b-form-input
+                    maxlength="30"
                     id="Event"
                     v-model="form.email"
                     type="text"
@@ -45,6 +46,7 @@
                   <b-form-input
                     id="Event"
                     v-model="form.username"
+                    maxlength="25"
                     type="text"
                     required
                     placeholder="full name , ex: doni wihaya"

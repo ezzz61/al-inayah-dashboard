@@ -1,8 +1,12 @@
 import Api from "@/api/api";
 
 export default {
-  Get() {
-    return Api().get("calon-siswa/");
+  Get(query) {
+    if (query) {
+      return Api().get(`calon-siswa?year=${query}`);
+    } else {
+      return Api().get(`calon-siswa`);
+    }
   },
   Add(data) {
     return Api().post("calon-siswa/add", data);

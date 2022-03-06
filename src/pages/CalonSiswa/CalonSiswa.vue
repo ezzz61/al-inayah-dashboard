@@ -48,12 +48,13 @@
             <div class="mb-2">
               <input
                 v-model="namaFile"
+                maxlength="30"
                 type="text"
                 placeholder="Masukkan nama file..."
               />
             </div>
             <download-excel
-              :stringifyLongNum="false"
+              :stringifyLongNum="true"
               class="btn btn-success btn-disabled"
               :data="selected"
               :fields="json_fields"
@@ -92,6 +93,35 @@
         </b-form-group>
       </b-col>
     </b-row>
+    <b-row>
+      <b-col lg="6" class="my-1">
+        <b-form-group
+          label="Filter by year"
+          label-cols-sm="3"
+          label-align-sm="right"
+          label-size="sm"
+          label-for="filterInput"
+          class="mb-0"
+        >
+          <b-input-group size="sm">
+            <b-form-input
+              v-model="yearFilter"
+              @keypress="onlyNumber"
+              type="search"
+              id="filterInput"
+              placeholder="Type to Search"
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button
+                class="btn btn-primary"
+                @click="getCalonSiswa(yearFilter)"
+                >Search</b-button
+              >
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+    </b-row>
 
     <!-- Main table element -->
     <div class="row justify-content-center">
@@ -102,6 +132,7 @@
         >
           <LoadingTable v-if="isLoading" />
           <b-table
+            :busy="isBusy"
             v-if="!isLoading"
             show-empty
             class="ml-2"
@@ -121,6 +152,12 @@
             selectable
             @row-selected="onRowSelected"
           >
+            <template #table-busy>
+              <div class="text-center text-danger my-2">
+                <b-spinner class="align-middle"></b-spinner>
+                <strong>Loading...</strong>
+              </div>
+            </template>
             <!-- Example scoped slot for select state illustrative purposes -->
             <template #cell(selected)="{ rowSelected }">
               <template v-if="rowSelected">
@@ -213,6 +250,8 @@ export default {
   },
   data() {
     return {
+      yearFilter: "",
+      isBusy: true,
       moment: moment,
       selectMode: "multi",
       selected: [],
@@ -224,7 +263,7 @@ export default {
         NISN: {
           field: "no_nisn",
           callback: (value) => {
-            return `${value} '`;
+            return `${value} `;
           },
         },
         "Nama Lengkap": "nama",
@@ -233,7 +272,7 @@ export default {
         "No Hp": {
           field: "no_telpon",
           callback: (value) => {
-            return `${value} '`;
+            return `+62${value.slice(1)}`;
           },
         },
         "E-Mail": "email",
@@ -256,6 +295,7 @@ export default {
         topCenter: false,
       },
       fields: [
+        "selected",
         {
           key: "createdAt",
           label: "Mendaftar pada",
@@ -332,6 +372,13 @@ export default {
     onRowSelected(items) {
       this.selected = items;
     },
+    onlyNumber($event) {
+      const keysAllowed = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+      const keyPressed = $event.key;
+      if (!keysAllowed.includes(keyPressed)) {
+        $event.preventDefault();
+      }
+    },
     notifyVue() {
       const notification = {
         template: `<span>Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for every web developer.</span>`,
@@ -384,7 +431,15 @@ export default {
     async getCalonSiswa() {
       try {
         this.isLoading = true;
-        let res = await calonSiswaApi.Get();
+        let res;
+        if (this.yearFilter) {
+          res = await calonSiswaApi.Get(this.yearFilter);
+
+          console.log(res);
+        } else {
+          res = await calonSiswaApi.Get();
+        }
+
         const calonSiswa = res.data.data.data;
         let filtredCalonSiswa = [];
 
@@ -393,8 +448,10 @@ export default {
           filtredCalonSiswa.push({
             ...siswa,
             no_nisn: siswa.no_nisn.toString(),
-            createdAt: this.moment(siswa.createdAt).format("l"),
-            tanggal_lahir: this.moment(siswa.tanggal_lahir).format("l"),
+            createdAt: this.moment(siswa.createdAt).format("DD-MM-YYYY"),
+            tanggal_lahir: this.moment(siswa.tanggal_lahir).format(
+              "DD-MM-YYYY"
+            ),
             lembaga_tujuan: siswa.lembaga_tujuan
               ? siswa.lembaga_tujuan.name
               : "-",
@@ -404,6 +461,7 @@ export default {
         this.calonSiswaData = filtredCalonSiswa;
         this.totalRows = this.calonSiswaData.length;
         this.isLoading = false;
+        this.isBusy = false;
       } catch (error) {
         this.$notify({
           message: "failed get data from server",

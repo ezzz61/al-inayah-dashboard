@@ -26,7 +26,7 @@
                       <b-form-input
                         id="Article"
                         v-model="form.nama"
-                        maxlength="30"
+                        maxlength="40"
                         type="text"
                         required
                         placeholder="Masukkan Nama Lengkap"
@@ -92,9 +92,10 @@
                       label-for="input-1"
                     >
                       <b-form-input
+                        @keypress="onlyNumber"
                         id="Article"
                         v-model="form.no_telpon"
-                        type="number"
+                        type="text"
                         maxlength="12"
                         required
                         placeholder="Contoh : 08xxx"
@@ -110,6 +111,7 @@
                       <b-form-input
                         id="Article"
                         v-model="form.email"
+                        maxlength="60"
                         type="text"
                         required
                         placeholder="Contoh : xxx@gmail.com"
@@ -130,6 +132,7 @@
                       <b-form-input
                         id="Article"
                         v-model="form.nama_ayah"
+                        maxlength="40"
                         type="text"
                         required
                         placeholder="Masukkan nama ayah"
@@ -144,6 +147,7 @@
                     >
                       <b-form-input
                         id="Article"
+                        maxlength="20"
                         v-model="form.pekerjaan_ayah"
                         type="text"
                         required
@@ -164,6 +168,7 @@
                       <b-form-input
                         id="Article"
                         v-model="form.nama_ibu"
+                        maxlength="40"
                         type="text"
                         required
                         placeholder="Masukkan nama ibu"
@@ -179,6 +184,7 @@
                       <b-form-input
                         id="Article"
                         v-model="form.pekerjaan_ibu"
+                        maxlength="20"
                         type="text"
                         required
                         placeholder="Contoh : Wiraswasta"
@@ -198,7 +204,7 @@
                         id="Article"
                         v-model="form.nama_wali"
                         type="text"
-                        required
+                        maxlength="40"
                         placeholder="Masukkan nama Wali , nama ibu , ayah , atau wali"
                       ></b-form-input>
                     </b-form-group>
@@ -213,7 +219,7 @@
                         id="Article"
                         v-model="form.pekerjaan_wali"
                         type="text"
-                        required
+                        maxlength="20"
                         placeholder="Contoh : Wiraswasta"
                       ></b-form-input>
                     </b-form-group>
@@ -228,6 +234,7 @@
                 >
                   <textarea
                     v-model="form.alamat"
+                    maxlength="255"
                     class="form-control"
                     id="exampleFormControlTextarea1"
                     rows="3"
@@ -245,6 +252,7 @@
                     id="Article"
                     v-model="form.nama_sekolah_asal"
                     type="text"
+                    maxlength="50"
                     required
                     placeholder="Masukkan sekolah asal"
                   ></b-form-input>
@@ -260,8 +268,10 @@
                     >
                       <b-form-input
                         id="Article"
+                        @keypress="onlyNumber"
                         v-model="form.no_nisn"
-                        type="number"
+                        maxlength="15"
+                        type="text"
                         required
                         placeholder="Masukkan No NISN"
                       ></b-form-input>
@@ -276,10 +286,11 @@
                       <b-form-input
                         id="Article"
                         v-model="form.tahun_kelulusan"
-                        type="number"
+                        @keypress="onlyNumber"
+                        type="text"
                         required
                         placeholder="Contoh : 2019"
-                        maxlength="20"
+                        maxlength="4"
                       ></b-form-input>
                     </b-form-group>
                   </div>
@@ -290,10 +301,12 @@
                       label-for="input-1"
                     >
                       <b-form-input
+                        @keypress="onlyNumber"
                         id="Article"
                         v-model="form.nilai_rata_rata"
-                        type="number"
+                        type="text"
                         required
+                        maxlength="5"
                         placeholder="Contoh : 8.5"
                       ></b-form-input>
                     </b-form-group>
@@ -413,6 +426,25 @@ export default {
   },
 
   methods: {
+    onlyNumber($event) {
+      const keysAllowed = [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        ".",
+      ];
+      const keyPressed = $event.key;
+      if (!keysAllowed.includes(keyPressed)) {
+        $event.preventDefault();
+      }
+    },
     async onSubmit() {
       this.isLoading = true;
       let data = {

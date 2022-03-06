@@ -20,6 +20,7 @@
                   <b-form-input
                     id="Article"
                     v-model="form.title"
+                    maxlength="40"
                     type="text"
                     required
                     placeholder="title ex: Cerita Nabi "

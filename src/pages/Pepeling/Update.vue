@@ -22,6 +22,7 @@
                   <b-form-input
                     id="Article"
                     v-model="form.title"
+                    maxlength="40"
                     type="text"
                     required
                     placeholder="title ex: Cerita Nabi "
@@ -46,6 +47,7 @@
                   <b-form-input
                     id="Article"
                     v-model="form.writter"
+                    maxlength="20"
                     type="text"
                     required
                     placeholder="Writter"
