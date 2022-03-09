@@ -121,6 +121,11 @@
           </b-input-group>
         </b-form-group>
       </b-col>
+      <b-col lg="6" class="my-1">
+        <b-button size="sm" @click="selectAllRows">{{
+          isRowSelectedAll ? "Select all" : "Unselect"
+        }}</b-button>
+      </b-col>
     </b-row>
 
     <!-- Main table element -->
@@ -341,6 +346,7 @@ export default {
         { key: "actions", label: "Actions" },
       ],
       totalRows: 1,
+      isRowSelectedAll: false,
       currentPage: 1,
       perPage: 5,
       pageOptions: [5, 10, 15, { value: 100, text: "Show a lot" }],
@@ -369,6 +375,12 @@ export default {
     this.totalRows = this.items.length;
   },
   methods: {
+    selectAllRows() {
+      this.isRowSelectedAll = !this.isRowSelectedAll;
+      this.isRowSelectedAll
+        ? this.$refs.selectableTable.clearSelected()
+        : this.$refs.selectableTable.selectAllRows();
+    },
     onRowSelected(items) {
       this.selected = items;
     },
