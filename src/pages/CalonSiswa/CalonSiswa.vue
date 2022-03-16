@@ -70,7 +70,7 @@
     <b-row>
       <b-col lg="6" class="my-1">
         <b-form-group
-          label="Filter"
+          label="Search"
           label-cols-sm="3"
           label-align-sm="right"
           label-size="sm"
@@ -304,6 +304,12 @@ export default {
         {
           key: "createdAt",
           label: "Mendaftar pada",
+          sortable: true,
+          sortDirection: "desc",
+        },
+        {
+          key: "is_verified",
+          label: "Verifikasi",
           sortable: true,
           sortDirection: "desc",
         },
