@@ -8,8 +8,8 @@ export default () => {
     headers: {
       Authorization: token ? token : null
     },
-    // baseURL: `https://al-inayah.herokuapp.com/api`
-    baseURL: `http://localhost:8080/api`
+    baseURL: `https://al-inayah.herokuapp.com/api`
+    // baseURL: `http://localhost:8080/api`
   });
   instance.interceptors.response.use(
     function(response) {
